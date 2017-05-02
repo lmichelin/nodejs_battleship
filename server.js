@@ -5,6 +5,7 @@ var port = 8080;
 
 var app = express();
 
+app.use(express.static('static'));
 app.set('views', path.join(__dirname,'views'));
 app.set('view engine', 'ejs');
 
