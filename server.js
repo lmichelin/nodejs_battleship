@@ -1,6 +1,6 @@
 /* Require Dependencies */
 var express = require('express');
-var handlebars = require('express-handlebars');
+var ejs = require('ejs');
 var path = require('path');
 
 /* Define Port 8080 by default */
@@ -11,8 +11,7 @@ var app = express();
 
 /* set view engine as handlebars */
 app.set('views', path.join(__dirname,'views'));
-app.set('view engine', 'handlebars');
-app.engine('handlebars', handlebars());
+app.set('view engine', 'ejs');
 
 /* Game route */
 app.get('/battleship', function(req, res) {
