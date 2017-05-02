@@ -21,6 +21,8 @@ app.get('/battleship', function(req, res) {
   res.send('Ligne: ' + row + ' ' + 'Colonne: ' + column);
 });
 
+/* include battleship.js */
+// var battleship = require('./battleship');
 /* Main route */
 app.get('/', function (req, res) {
   res.render('index');
