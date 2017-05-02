@@ -1,0 +1,18 @@
+{
+  "name": "battleship",
+  "version": "1.0.0",
+  "description": "This is a battleship game in javascript with a server-client base",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@gitlab.ensta.fr:michelin/IN104-Battleship.git"
+  },
+  "author": "Francois Hendriks & Louis-Marie Michelin",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.15.2"
+  }
+}
