@@ -21,6 +21,5 @@ function checkPosition(x, y) {
 	}
 };
 
-<
 
 
