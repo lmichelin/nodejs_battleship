@@ -1,13 +1,12 @@
 var express = require('express');
-var handlebars = require('express-handlebars');
+var ejs = require('ejs');
 var path = require('path');
 var port = 8080;
 
 var app = express();
 
 app.set('views', path.join(__dirname,'views'));
-app.set('view engine', 'handlebars');
-app.engine('handlebars', handlebars());
+app.set('view engine', 'ejs');
 
 app.get('/battleship', function(req, res) {
   var row = req.param('row');
