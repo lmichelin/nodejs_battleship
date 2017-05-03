@@ -8,15 +8,18 @@
 <body>
 
   <p>
-      <form action="/battleship">
+      <div class="form-group">
   Ligne:<br>
-  <input type="number" name="row" value="0">
+  <input id="row" type="number" name="row" value="0">
   <br>
   Colonne:<br>
-  <input type="number" name="column" value="0">
+  <input id="column" type="number" name="column" value="0">
   <br><br>
-  <input type="submit" value="Submit">
-</form>
+  <button class="btn btn-primary" onclick="action()">submit</button>
+</div>
+  </p>
+  <p id="output">
+
   </p>
 
   <table>
@@ -143,5 +146,8 @@
       </tr>
     </tbody>
   </table>
+
+  <script src="script.js"></script>
+
 </body>
 </html>
