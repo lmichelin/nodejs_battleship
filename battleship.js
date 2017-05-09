@@ -59,16 +59,16 @@ function boat (name, size) {
 	 * @default (0,0, ... 0)
 	 * @this {boat}
 	 */
-	this.coordinatesList = new Array(this.size*[0,0]);
+	this.coordinatesList = new Array(this.size).fill([0,0]);
 
 };
 
 
 /** @type {Object} Battleship class
 * Contains all the different methods and variables for the battleship game
-* @param {string} player Player name 
+* @param {string} player Player name
 */
-function battleship(player) { 
+function battleship(player) {
 
 	/**
 	 * Player name
@@ -105,7 +105,7 @@ function battleship(player) {
 		else {
 			return false;
 		}
-	};	
+	};
 
 
 	/** Attack function: Will either hit or miss target. Changes the value of the grid: 0 is water, 1 is boat, 2 is test but miss, 3 is test with a hit, 4 is sunk ...
@@ -127,11 +127,11 @@ function battleship(player) {
 				for (var i = 0; i < boat.coordinatesList.length; i++) {
 					if (!isInGrid(boat.coordinatesList[i])) {
 							//Grid problem not in grid
-						}	
+						}
 					if (!isZoneAvailable(boat.coordinatesList[i], this.grid)) {
 						// Zone problem
 					}
-				}	
+				}
 				break;
 			default:
 				// statements_def
@@ -147,10 +147,10 @@ function battleship(player) {
  * @return {Boolean}
  */
 function isInGrid(coordinates) {
-	if (min(9, max(coordinates[0],0)) != coordinates[0] ) {
+	if (Math.min(9, Math.max(coordinates[0],0)) != coordinates[0] ) {
 		return false;
 	}
-	if (min(9, max(coordinates[1],0)) != coordinates[1] ) {
+	if (Math.min(9, Math.max(coordinates[1],0)) != coordinates[1] ) {
 		return false;
 	}
 	return true;
@@ -178,4 +178,4 @@ function isZoneAvailable(coordinates, currentGrid) {
 	return true;
 };
 
-module.exports = battleship;
+module.exports = {battleship, boat};

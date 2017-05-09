@@ -8,4 +8,7 @@ function action(row, column){
   };
   request.open("GET", "battleship?row=" + row + "&column=" + column);
   request.send(null);
+  $.post("battleship/post", function(boat, status){
+        alert("Data: " + data + "\nStatus: " + status);
+    });
 }
