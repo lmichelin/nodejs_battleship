@@ -9,46 +9,39 @@
 </head>
 <body>
 
-  <p>
-    <div class="form-group">
-      Ligne:<br>
-      <input id="row" type="number" name="row" value="0">
-      <br>
-      Colonne:<br>
-      <input id="column" type="number" name="column" value="0">
-      <br><br>
-      <button class="btn btn-primary" onclick="action()">submit</button>
-    </div>
-  </p>
-  <p id="output">
-
-  </p>
+<h1 class="text-center">The battleship Game</h1>
 
   <div class="container">
     <table style="border: none;" class="table table-bordered text-center">
       <tbody>
         <% for (var i = 0; i < battleship.grid.length; i++) {%>
-          <tr class="row_number_<%=i+1%>">
+          <tr value="<%=i+1%>">
           <% for (var j = 0; j < battleship.grid[i].length; j++) {
             switch (battleship.grid[i][j]) {
-              case 0: %>
-                <td style="padding:20px;" class="btn btn-info"></td>
-                <% break;
-              case 1: %>
-                <td style="padding:20px;" class="btn btn-warning"></td>
-                <% break;
-              case 2: %>
-                <td style="padding:20px;" class="btn btn-danger"></td>
-                  <% break;
-              default: %>
-                <td></td>
-          <%break; }
-            } %>
+              case 0:
+                var btn_class = "info";
+                break;
+              case 1:
+                var btn_class = "warning";
+                break;
+              case 2:
+                var btn_class = "danger";
+                break;
+              default:
+                var btn_class = "default";
+          break; } %>
+          <td value="<%=j+1%>" onclick="action($(this).parent().attr('value'), $(this).attr('value'))" style="padding:20px;" class="btn btn-<%=btn_class%>"></td>
+            <% } %>
           </tr>
         <% } %>
       </tbody>
     </table>
   </div>
+
+
+  <p id="output">
+
+  </p>
 
   <script src="script.js"></script>
 
