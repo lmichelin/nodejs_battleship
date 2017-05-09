@@ -9,7 +9,7 @@
 </head>
 <body>
 
-<h1 class="text-center">The battleship Game</h1>
+<h1 class="text-center">The Battleship Game</h1>
 
   <div class="container">
     <table style="border: none;" class="table table-bordered text-center">
@@ -19,18 +19,24 @@
           <% for (var j = 0; j < battleship.grid[i].length; j++) {
             switch (battleship.grid[i][j]) {
               case 0:
-                var btn_class = "info";
+                var btn_class = "btn-info";
                 break;
               case 1:
-                var btn_class = "warning";
+                var btn_class = "btn-default";
                 break;
               case 2:
-                var btn_class = "danger";
+                var btn_class = "btn-success";
+                break;
+              case 3:
+                var btn_class = "btn-warning";
+                break;
+              case 4:
+                var btn_class = "btn-danger";
                 break;
               default:
-                var btn_class = "default";
+                var btn_class = "";
           break; } %>
-          <td value="<%=j%>" onclick="action($(this).parent().attr('value'), $(this).attr('value'))" style="padding:20px;" class="btn btn-<%=btn_class%>"></td>
+          <td value="<%=j%>" type="button" onclick="action($(this).parent().attr('value'), $(this).attr('value'))" style="padding:20px;" class="btn <%=btn_class%>"></td>
             <% } %>
           </tr>
         <% } %>
@@ -38,12 +44,18 @@
     </table>
   </div>
 
+  <%= boat.name %>
+
 
   <p id="output">
 
   </p>
 
   <script src="script.js"></script>
+  <script type="text/javascript">
+
+    // console.log(boat);
+  </script>
 
 </body>
 </html>
