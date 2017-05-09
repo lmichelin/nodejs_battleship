@@ -11,6 +11,7 @@ var port = 8080;
 var app = express();
 
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
 
 app.use(express.static('static'));
 app.set('views', path.join(__dirname,'views'));
@@ -25,6 +26,7 @@ var carrier = new boat('carrier', 5);
 /* Game route */
 app.get('/battleship', function(req, res) {
   var row = req.param('row');
+  console.log(row);
   var column = req.param('column');
 
   battleship_1.attack(row, column);

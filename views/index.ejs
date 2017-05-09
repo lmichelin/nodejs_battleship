@@ -44,18 +44,17 @@
     </table>
   </div>
 
-  <%= boat.name %>
+  <%= boat %>
 
 
   <p id="output">
 
   </p>
 
-  <script src="script.js"></script>
-  <script type="text/javascript">
-
-    // console.log(boat);
+  <script>
+    var boat = <%- JSON.stringify(boat)%>;        
   </script>
+  <script src="script.js"></script>
 
 </body>
 </html>
