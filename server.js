@@ -24,7 +24,12 @@ app.get('/battleship', function(req, res) {
 
   battleship_1.attack(row, column);
 
-  res.render('index', {'battleship':battleship_1});
+  res.send({'battleship':battleship_1});
+});
+
+app.post('/battleship/post', function(req, res) {
+	var boat = req.body.boat;
+	battleship_1.setBoat(boat);
 });
 
 // Main route
