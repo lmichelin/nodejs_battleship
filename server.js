@@ -26,9 +26,8 @@ var battleship = require('./battleship');
 
 // Main route
 app.get('/', function (req, res) {
-  res.render('index');
+  res.render('index', {'battleship':battleship});
 });
 
-// Initialize server 
+// Initialize server
 app.listen(port);
- 

@@ -1,4 +1,3 @@
-
 /** @type {Object} Battleship class
 * Contains all the different methods and variables for the battleship game
 * @param {string} player Player name 
@@ -19,13 +18,13 @@ function battleship(player) {
 		[1, 1, 1, 0, 0, 0, 0, 0, 0, 0],
 		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-		[0, 0, 0, 1, 1, 0, 0, 0, 0, 0],
+		[0, 0, 0, 1, 1, 0, 0, 2, 0, 0],
+		[0, 0, 0, 0, 0, 0, 0, 2, 0, 0],
 		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0]	
 	];
 
 	/** Function to determine wether a boat is on the desired coordinates
@@ -41,6 +40,7 @@ function battleship(player) {
 			return false;
 		}
 	};	
+
 
 	/** Attack function: Will either hit or miss target. Changes the value of the grid: 0 is water, 1 is boat, 2 is test but miss, 3 is test with a hit ...
 	* @this {battleship}
