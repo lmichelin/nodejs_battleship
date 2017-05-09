@@ -15,7 +15,7 @@
     <table style="border: none;" class="table table-bordered text-center">
       <tbody>
         <% for (var i = 0; i < battleship.grid.length; i++) {%>
-          <tr value="<%=i+1%>">
+          <tr value="<%=i%>">
           <% for (var j = 0; j < battleship.grid[i].length; j++) {
             switch (battleship.grid[i][j]) {
               case 0:
@@ -30,7 +30,7 @@
               default:
                 var btn_class = "default";
           break; } %>
-          <td value="<%=j+1%>" onclick="action($(this).parent().attr('value'), $(this).attr('value'))" style="padding:20px;" class="btn btn-<%=btn_class%>"></td>
+          <td value="<%=j%>" onclick="action($(this).parent().attr('value'), $(this).attr('value'))" style="padding:20px;" class="btn btn-<%=btn_class%>"></td>
             <% } %>
           </tr>
         <% } %>

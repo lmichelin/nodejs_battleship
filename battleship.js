@@ -33,7 +33,7 @@ function battleship(player) {
 	* @return {boolean} true if the value is 1, or false
 	*/
 	this.checkPosition = function (x, y) {
-		if (array[x][y] == 1) {
+		if (this.grid[x][y] == 1) {
 			return true;
 		}
 		else {
@@ -42,12 +42,12 @@ function battleship(player) {
 	};	
 
 
-	/** Attack function: Will either hit or miss target. Changes the value of the grid: 0 is water, 1 is boat, 2 is test but miss, 3 is test with a hit ...
+	/** Attack function: Will either hit or miss target. Changes the value of the grid: 0 is water, 1 is boat, 2 is test but miss, 3 is test with a hit, 4 is sunk ...
 	* @this {battleship}
 	* @param {tuple} (x,y) Attack coordinates
 	*/
 	this.attack = function(x,y) {
-		if (checkPosition(x,y)) {
+		if (this.checkPosition(x,y)) {
 			this.grid[x][y] = 3;
 		}
 		else {
