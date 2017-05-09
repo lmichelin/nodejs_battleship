@@ -12,4 +12,3 @@ function action(row, column){
         alert("Data: " + boat + "\nStatus: " + status);
     });
 };
-

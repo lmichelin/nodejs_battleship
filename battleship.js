@@ -43,6 +43,14 @@ function boat (name, size) {
 	this.coordinates = [0,0];
 
 	/**
+	 * Checks wether a boat has been set on the grid or not
+	 * @type {Boolean}
+	 * @this {boat}
+	 * @default false
+	 */
+	this.isSet = false;
+
+	/**
 	 * Set position of the boat
 	 * @param {tuple} initial_coordinates Coordinates of the position of the first case
 	 * @param {string} direction can be 'right', 'down'
@@ -60,6 +68,25 @@ function boat (name, size) {
 	 * @this {boat}
 	 */
 	this.coordinatesList = new Array(this.size).fill([0,0]);
+
+	/**
+	 * Set the coordinatesList equal to the position of the boat when a initial positio and direction have been chosen
+	 * @this {boat}
+	 */
+	this.setCoordinatesList = function() {
+		switch (this.direction) {
+			case 'down':
+				for (var i = 0; i < this.size; i++) {
+					this.coordinatesList[i] = this.coordinates + [i,0];
+				}
+				break;
+			case 'right':
+				for (var i = 0; i < this.size; i++) {
+					this.coordinatesList[i] = this.coordinates + [0,i];
+				}
+				break;
+		}
+	};
 
 };
 
@@ -121,22 +148,40 @@ function battleship(player) {
 		}
 	};
 
+	/**
+	 * Sets boat on grid
+	 * @param {object boat} boat Boat object
+	 * @this {battleship}
+	 */
 	this.setBoat = function (boat) {
+		if (boat.isSet) {
+			// Error: boat is already set on grid
+		}
+		if (boat.coordinatesList[boat.size-1] == [0,0]) {
+			// Error: coordinates not set ...
+		}
+		for (var i = 0; i < boat.coordinatesList.length; i++) {
+			if (!isInGrid(boat.coordinatesList[i])) {
+				//Grid problem not in grid
+			}
+			if (!isZoneAvailable(boat.coordinatesList[i], this.grid)) {
+				// Zone problem
+			}
+		}
 		switch (boat.direction) {
 			case 'down':
-				for (var i = 0; i < boat.coordinatesList.length; i++) {
-					if (!isInGrid(boat.coordinatesList[i])) {
-							//Grid problem not in grid
-						}
-					if (!isZoneAvailable(boat.coordinatesList[i], this.grid)) {
-						// Zone problem
-					}
+				for (var i = 0; i < boat.size; i++) {
+					this.grid[boat.coordinates[0] + i][boat.coordinates[1]];
 				}
+
 				break;
-			default:
-				// statements_def
+			case 'right':
+			for (var i = 0; i < boat.size; i++) {
+				this.grid[boat.coordinates[0]][boat.coordinates[1] + i];
+			}
 				break;
 		}
+		boat.isSet = true;
 	};
 
 };

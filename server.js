@@ -22,6 +22,25 @@ var battleship = require('./battleship').battleship;
 var boat = require('./battleship').boat;
 var battleship_1 = new battleship('player_one');
 var carrier = new boat('carrier', 5);
+var battleship = new boat('battleship', 4);
+var submarine = new boat('submarine', 3);
+var cruiser = new boat('cruiser', 3);
+var destroyer = new boat('destroyer', 2);
+
+//Initialize game route
+app.get('/initialize', function(req, res) {
+	context = {
+		'carrier': carrier,
+		'battleship': battleship,
+		'submarine': submarine,
+		'cruiser': cruiser,
+		'destroyer': destroyer
+	};
+	res.render('initialize', context);
+});
+
+app.post('initialize/post', function(req, res) {
+});
 
 /* Game route */
 app.get('/battleship', function(req, res) {
@@ -31,7 +50,7 @@ app.get('/battleship', function(req, res) {
 
   battleship_1.attack(row, column);
 
-  res.send({'battleship':battleship_1, 'boat':carrier});
+  res.render('index', {'battleship':battleship_1});
 });
 
 app.post('/battleship/post', function(req, res) {
@@ -41,7 +60,7 @@ app.post('/battleship/post', function(req, res) {
 
 // Main route
 app.get('/', function (req, res) {
-  res.render('index', {'battleship':battleship_1, 'boat':carrier});
+  res.render('index', {'battleship':battleship_1});
 });
 
 // Initialize server
