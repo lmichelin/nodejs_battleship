@@ -1,7 +1,7 @@
-module.exports = {
+var battleship = { 
 
-	/* Make a simple grid */
-	var array = {
+	/* Make a simple grid of the game*/
+	grid: [
 		[1, 1, 1, 0, 0, 0, 0, 0, 0, 0],
 		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -12,15 +12,18 @@ module.exports = {
 		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0]	
-	};
+	],
 
-	function checkPosition(x, y) {
+	checkPosition: function (x, y) {
 		if (array[x][y] == 1) {
 			return true;
 		}
 		else {
 			return false;
 		}
-	};
+	},	
+
 
 };
+
+module.exports = battleship;
