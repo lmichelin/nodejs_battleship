@@ -16,6 +16,7 @@ app.set('view engine', 'ejs');
 // include battleship.js
 var battleship = require('./battleship');
 var battleship_1 = new battleship('player_one');
+var carrier = new boat('carrier', 5);
 
 /* Game route */
 app.get('/battleship', function(req, res) {
