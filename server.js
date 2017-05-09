@@ -13,20 +13,23 @@ app.use(express.static('static'));
 app.set('views', path.join(__dirname,'views'));
 app.set('view engine', 'ejs');
 
+// include battleship.js
+var battleship = require('./battleship');
+var battleship_1 = new battleship('player_one');
+
 /* Game route */
 app.get('/battleship', function(req, res) {
   var row = req.param('row');
   var column = req.param('column');
 
-  res.send('Ligne: ' + row + ' ' + 'Colonne: ' + column);
-});
+  battleship_1.attack(row, column);
 
-// include battleship.js
-var battleship = require('./battleship');
+  res.render('index', {'battleship':battleship_1});
+});
 
 // Main route
 app.get('/', function (req, res) {
-  res.render('index', {'battleship':battleship});
+  res.render('index', {'battleship':battleship_1});
 });
 
 // Initialize server
