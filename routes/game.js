@@ -16,19 +16,20 @@ router.get('/', function(req, res) {
 });
 
 router.get('/battleship', function(req, res) {
-  var row = req.param('row');
-  var column = req.param('column');
+	var row = req.param('row');
+	var column = req.param('column');
 
-  battleship_1.attackEnemy(row, column, battleship_2);
+	battleship_1.attackEnemy(row, column, battleship_2);
 
-  res.render('game', {'battleship_1':battleship_1, 'battleship_2':battleship_2});
+	res.render('game', {'battleship_1':battleship_1, 'battleship_2':battleship_2});
 });
 
 router.post('/post', function(req, res) {
-	var boat = req.body.boat;
-	console.log(boat);
+	var command = JSON.parse(req.body.command);
 
-	res.send(boat + 'Awww Yeaaaaaahhhh !!!!');
+	battleship_1.attackEnemy(command.row, command.column, battleship_2);
+
+	res.render('game', {'battleship_1':battleship_1, 'battleship_2':battleship_2});
 });
 
 module.exports = router;

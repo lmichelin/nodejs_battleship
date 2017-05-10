@@ -37,7 +37,7 @@ function boat (name, size) {
 	/**
 	 * Sinks a ship
 	 * @this {boat}
-	 */		
+	 */
 	this.sink = function() {
 		this.isSunk = true;
 	}
