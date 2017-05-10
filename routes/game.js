@@ -6,26 +6,29 @@ var router = express.Router();
 
 // Battleship game dependencies
 var battleship_1 = require('../routes/initialization').battleship_1;
+var battleship_2 = require('../routes/initialization').battleship_2;
 var boat = require('../gamejs/battleship').boat;
 
 
 /* Game route */
-router.get('', function(req, res) {
-	res.render('game', {'battleship': battleship_1})
+router.get('/', function(req, res) {
+	res.render('game', {'battleship_1': battleship_1, 'battleship_2': battleship_2})
 });
 
 router.get('/battleship', function(req, res) {
   var row = req.param('row');
   var column = req.param('column');
 
-  battleship_1.attackCoordinates(row, column);
+  battleship_1.attackEnemy(row, column, battleship_2);
 
-  res.render('game', {'battleship':battleship_1});
+  res.render('game', {'battleship_1':battleship_1, 'battleship_2':battleship_2});
 });
 
 router.post('/post', function(req, res) {
 	var boat = req.body.boat;
-	battleship_1.setBoat(carrier);
+	console.log(boat);
+
+	res.send(boat + 'Awww Yeaaaaaahhhh !!!!');
 });
 
 module.exports = router;

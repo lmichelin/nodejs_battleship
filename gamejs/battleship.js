@@ -1,3 +1,10 @@
+function game(name, player_one, player_two) {
+	this.name = name;
+	this.player_one = player_one;
+	this.player_two = player_two;
+}
+
+
 /**
  * Boat Object
  * @class Boat class
@@ -162,14 +169,14 @@ function battleship(player) {
 		}
 	};
 
-	/** Attack function: Will either hit or miss target. Changes the value of the grid: 0 is water, 1 is boat, 2 is test but miss, 3 is test with a hit, 4 is sunk ...
+	/** Attack Enemy function: Will either hit or miss target. Changes the value of the enemy grid: 0 is water, 1 is boat, 2 is test but miss, 3 is test with a hit, 4 is sunk ...
 	* @this {battleship}
 	* @param {object} enemy_battleship battleship object of the opponent
 	* @param {tuple} (x,y) Attack coordinates
 	*/
-	this.attack = function(x,y, enemy_battleship) {
+	this.attackEnemy = function(x,y, enemy_battleship) {
 		if (this.attack_grid[x][y] == 2) {
-			// Error: Position already checked ...
+			console.error('This zone has already been hit !!')
 		}
 		if (enemy_battleship.checkPosition(x,y)) {
 			enemy_battleship.grid[x][y] = 3;
@@ -181,7 +188,7 @@ function battleship(player) {
 		}
 	};
 
-	this.attackCoordinates = function(x,y) {
+	this.attackMyCoordinates = function(x,y) {
 		if (this.checkPosition(x,y)) {
 			this.grid[x][y] = 3;
 		}
@@ -223,17 +230,17 @@ function battleship(player) {
 	 */
 	this.setBoat = function (boat) {
 		if (boat.isSet) {
-			// Error: boat is already set on grid
+			console.error(boat.name + ' is already set on grid');
 		}
 		if (boat.coordinatesList[boat.size-1] == [0,0]) {
-			// Error: coordinates not set ...
+			console.error(boat.name + 'coordinatesList are not set ...')
 		}
 		for (var i = 0; i < boat.coordinatesList.length; i++) {
 			if (!isInGrid(boat.coordinatesList[i])) {
-				//Grid problem not in grid
+				console.error(boat.name + 'is not in grid')
 			}
 			if (!isZoneAvailable(boat.coordinatesList[i], this.grid)) {
-				// Zone problem
+				console.error('Zone error,' + boat.name + 'will be too close to another ship')
 			}
 		}
 		switch (boat.direction) {
