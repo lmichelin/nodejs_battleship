@@ -18,45 +18,17 @@ app.set('views', path.join(__dirname,'views'));
 app.set('view engine', 'ejs');
 
 // include battleship.js
-var battleship = require('./battleship').battleship;
-var boat = require('./battleship').boat;
-var battleship_1 = new battleship('player_one');
-var carrier = new boat('carrier', 5);
-var battleship = new boat('battleship', 4);
-var submarine = new boat('submarine', 3);
-var cruiser = new boat('cruiser', 3);
-var destroyer = new boat('destroyer', 2);
+var battleship = require('./gamejs/battleship').battleship;
+var boat = require('./gamejs/battleship').boat;
 
-//Initialize game route
-app.get('/initialize', function(req, res) {
-	context = {
-		'carrier': carrier,
-		'battleship': battleship,
-		'submarine': submarine,
-		'cruiser': cruiser,
-		'destroyer': destroyer
-	};
-	res.render('initialize', context);
-});
+// include routes
+var initialization = require('./routes/initialization').router;
+app.use('/initialization', initialization);
+var game = require('./routes/game');
+app.use('/game', game);
 
-app.post('initialize/post', function(req, res) {
-});
-
-/* Game route */
-app.get('/battleship', function(req, res) {
-  var row = req.param('row');
-  console.log(row);
-  var column = req.param('column');
-
-  battleship_1.attack(row, column);
-
-  res.render('index', {'battleship':battleship_1});
-});
-
-app.post('/battleship/post', function(req, res) {
-	var boat = req.body.boat;
-	battleship_1.setBoat(carrier);
-});
+//Import battleship grids
+var battleship_1 = require('./routes/initialization').battleship_1;
 
 // Main route
 app.get('/', function (req, res) {

@@ -1,5 +1,6 @@
 /**
  * Boat Object
+ * @class Boat class
  * @param  {string} name  Name of the boat category
  * @param  {integer} size Number of spaces occupied (size of the boat)
  */
@@ -25,6 +26,14 @@ function boat (name, size) {
 	 * @this {boat}
 	 */
 	this.isSunk = false;
+
+	/**
+	 * Sinks a ship
+	 * @this {boat}
+	 */		
+	this.sink = function() {
+		this.isSunk = true;
+	}
 
 	/**
 	 * Placement direction on the grid ('right', 'down')
@@ -92,6 +101,7 @@ function boat (name, size) {
 
 
 /** @type {Object} Battleship class
+* @class battleship class with one per player with all the grids and methods
 * Contains all the different methods and variables for the battleship game
 * @param {string} player Player name
 */
@@ -110,7 +120,7 @@ function battleship(player) {
 	this.grid =  [
 		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+		[0, 0, 1, 1, 1, 1, 1, 0, 0, 0],
 		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -119,6 +129,24 @@ function battleship(player) {
 		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 	];
+
+	/**
+	 * Second grid for attack management
+	 * It will be entirely based on the second player or AI
+	 * @type {Array}
+	 */
+	this.attack_grid = [
+		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+		];
 
 	/** Function to determine wether a boat is on the desired coordinates
 	* @this {battleship}
@@ -134,12 +162,26 @@ function battleship(player) {
 		}
 	};
 
-
 	/** Attack function: Will either hit or miss target. Changes the value of the grid: 0 is water, 1 is boat, 2 is test but miss, 3 is test with a hit, 4 is sunk ...
 	* @this {battleship}
+	* @param {object} enemy_battleship battleship object of the opponent
 	* @param {tuple} (x,y) Attack coordinates
 	*/
-	this.attack = function(x,y) {
+	this.attack = function(x,y, enemy_battleship) {
+		if (this.attack_grid[x][y] == 2) {
+			// Error: Position already checked ...
+		}
+		if (enemy_battleship.checkPosition(x,y)) {
+			enemy_battleship.grid[x][y] = 3;
+			this.attack_grid[x][y] = 3;
+		}
+		else {
+			enemy_battleship.grid[x][y] = 2;
+			this.attack_grid[x][y] = 2;
+		}
+	};
+
+	this.attackCoordinates = function(x,y) {
 		if (this.checkPosition(x,y)) {
 			this.grid[x][y] = 3;
 		}
@@ -147,6 +189,32 @@ function battleship(player) {
 			this.grid[x][y] = 2;
 		}
 	};
+
+	var carrier = new boat('carrier', 5);
+	var battleship = new boat('battleship', 4);
+	var cruiser = new boat('cruiser', 3);
+	var submarine = new boat('submarine', 3);
+	var destroyer = new boat('destroyer', 2);
+
+	/**
+	 * Dictionnary with all the boats on this battleship player game
+	 * @this {battleship}
+	 * @type {dictionnary}
+	 */
+	this.boats = {
+		'carrier': carrier,
+		'battleship': battleship,
+		'cruiser': cruiser,
+		'submarine': submarine,
+		'destroyer': destroyer,
+	};
+
+	/**
+	 * Checks wether it is the player's turn
+	 * @type {Boolean}
+	 * @default false
+	 */
+	this.isTurn = false;
 
 	/**
 	 * Sets boat on grid
@@ -183,8 +251,9 @@ function battleship(player) {
 		}
 		boat.isSet = true;
 	};
-
 };
+
+
 
 /**
  * Test to check wether the boat can be placed on these coordinates
