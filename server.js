@@ -11,7 +11,7 @@ var port = 8080;
 var app = express();
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({extended: false}));
 
 app.use(express.static('static'));
 app.set('views', path.join(__dirname,'views'));

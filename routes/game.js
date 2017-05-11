@@ -25,11 +25,11 @@ router.get('/battleship', function(req, res) {
 });
 
 router.post('/post', function(req, res) {
-	var command = JSON.parse(req.body.command);
-
-	battleship_1.attackEnemy(command.row, command.column, battleship_2);
-
-	res.render('game', {'battleship_1':battleship_1, 'battleship_2':battleship_2});
+	var coordinates = req.body.coordinates;
+	console.log(coordinates);
+	//battleship_1.attackEnemy(coordinates.row, coordinates.column, battleship_2);
+	res.send(coordinates + ' ahwwwww !!!!');
+	//res.render('game', {'battleship_1':battleship_1, 'battleship_2':battleship_2});
 });
 
 module.exports = router;

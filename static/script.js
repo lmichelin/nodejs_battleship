@@ -9,7 +9,8 @@ function action(row, column){
   };
 
   request.open("POST", "game/post");
-  var command = { "row":row, "column":column }
+  var coordinates = { "row":row, "column":column };
+  console.log(JSON.stringify(coordinates));
   request.setRequestHeader("Content-Type", "application/X-www-form-urlencoded");
-  request.send("command=" + JSON.stringify(command));
+  request.send("coordinates=" + JSON.stringify(coordinates));
 }
