@@ -1,14 +1,16 @@
 /* Require Dependencies */
 var express = require('express');
+/* Initialize express for easy server-client relationship */
+var app = express();
 var ejs = require('ejs');
 var bodyParser = require('body-parser');
 var path = require('path');
+var server  = require('http').createServer(app);
+var io = require('socket.io')(server);
 
 /* Define Port 8080 by default */
 var port = 8080;
 
-/* Initialize express for easy server-client relationship */
-var app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
@@ -35,5 +37,18 @@ app.get('/', function (req, res) {
   res.render('index', {'battleship':battleship_1});
 });
 
+io.on('connection', function (socket) {
+  socket.emit('news', { hello: 'world' });
+  socket.on('my other event', function (data) {
+    console.log(data);
+    console.log('Client connected...');
+  });
+
+      socket.on('join', function(data) {
+          console.log(data);
+          socket.emit('messages', 'Hello from server');
+        });
+});
+
 // Initialize server
-app.listen(port);
+server.listen(port);
