@@ -2,12 +2,29 @@
 var express = require('express');
 /* Initialize express for easy server-client relationship */
 var app = express();
+var session = require('express-session');
 var ejs = require('ejs');
 var bodyParser = require('body-parser');
 var path = require('path');
 var sess = require('express-session');
 var server  = require('http').createServer(app);
 var io = require('socket.io')(server);
+var session = require("express-session")({
+  secret: "ZEHIU5348TQG8VT4VUJEZYSY483YA",
+  cookie: {httpOnly: true, secure: true},
+  resave: true,
+  saveUninitialized: true
+});
+var sharedsession = require("express-socket.io-session");
+
+// Use express-session middleware for express
+app.use(session);
+
+// Use shared session middleware for socket.io
+// setting autoSave:true
+io.use(sharedsession(session, {
+    autoSave:true
+}));
 
 /* Define Port 8080 by default */
 var port = 8080;
@@ -35,22 +52,28 @@ var battleship_1 = require('./routes/initialization').battleship_1;
 
 // Main route
 app.get('/', function (req, res) {
+  var sess = req.session;
   res.render('index', {'battleship':battleship_1});
 });
 
 
-io.on('connection', function (socket) {
-  socket.emit('news', { hello: 'world' });
-  socket.on('my other event', function (data) {
-    console.log(data);
-    console.log('Client connected...');
+io.sockets.on('connection', function (socket) {
+  socket.on("login", function(pseudo, callback) {
+    socket.handshake.session.test = "test";
+    socket.handshake.session.pseudo = pseudo;
+    // socket.handshake.session.save();
+    console.log(session);
   });
-
-      socket.on('join', function(data) {
-          console.log(data);
-          socket.emit('messages', 'Hello from server');
-        });
+  console.log('Un client est connecté !');
+  socket.emit('message', 'Tu es biezn connecté');
+  socket.broadcast.emit('message', 'un autre se connecte !');
+  // Quand le serveur reçoit un signal de type "message" du client
+  socket.on('message', function (message) {
+    console.log(socket.handshake.session.pseudo + ' me parle ! Il me dit : ' + message);
+  });
 });
+
+
 
 // Initialize server
 server.listen(port);

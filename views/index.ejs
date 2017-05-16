@@ -43,20 +43,32 @@
     </table>
   </div>
 
+  <p><input type="button" value="Embêter le serveur" id="poke" /></p>
+  <p><input type="button" value="login" id="login" /></p>
+
 
   <p id="output">
 
   </p>
 
   <script src="/socket.io/socket.io.js"></script>
-<script>
-  var socket = io.connect("/");
-  socket.on('news', function (data) {
-    console.log(data);
-    socket.emit('my other event', { my: 'data' });
-  });
-</script>
   <script src="script.js"></script>
 
+  <script>
+  var socket = io.connect('/');
+  // var pseudo = prompt('Quel est votre pseudo ?');
+  // socket.emit('petit_nouveau', pseudo);
+  socket.on('message', function(message) {
+    console.log('Le serveur a un message pour vous : ' + message);
+  })
+
+  $('#poke').click(function () {
+    socket.emit('message', 'Salut serveur, ça va ?');
+  })
+  $('#login').click(function () {
+    var pseudo = 'my_username'
+    socket.emit('login', pseudo);
+  })
+  </script>
 </body>
 </html>
