@@ -1,8 +1,96 @@
-function game(name, player_one, player_two) {
+/**
+ * Main game object
+ * @class Game class
+ * @param  {string} name       Name of the game
+ * @param  {player object} player_one First player to have created the game
+ */
+function game(name, player_one) {
+
+	/**
+	 * Name of the game
+	 * @type {string}
+	 * @this {game}
+	 */
 	this.name = name;
+
+	/**
+	 * First player object
+	 * @type {player}
+	 * @this {game}
+	 */
 	this.player_one = player_one;
-	this.player_two = player_two;
-}
+
+	/**
+	 * Second player object
+	 * @type {player}
+	 */
+	this.player_two = null;
+
+	/**
+	 * Typer of the game can be 'multi' or 'solo'
+	 * @type {String}
+	 */
+	this.gameType  = 'multi'; 
+
+};
+
+/**
+ * Player object
+ * @param  {string} username username
+ * @class player object
+ */
+function player(username) {
+
+	/**
+	 * username
+	 * @type {String}
+	 * @this {player}
+	 */
+	this.username = username;
+
+
+	/**
+	 * Create new multiplayer game function
+	 * @param  {String} gameName Name of the game
+	 * @this {player}
+	 * @return {game}          New game
+	 */
+	this.createMultiplayerGame = function(gameName) {
+		var result = new game(gameName, this.username);
+		return result;
+	};
+
+	/**
+	 * Create solo game function
+	 * @return {game} new solo game object
+	 * @this {player}
+	 */
+	this.createSoloGame = function() {
+		var result = new game('solo', this.username);
+		result.gameType = 'solo';
+		return result;
+	};
+
+	/**
+	 * Create battleship object for the user containing all the boats and grids
+	 * @return {battleship} battleship object containing all grid information
+	 * @this {player}
+	 */
+	this.createBattleship = function() {
+		var result = new battleship();
+		return result;
+	};
+
+	/**
+	 * Join game function (a user who did not create a game must join)
+	 * @param  {String} gameName game Name that has already been created
+	 * @this {player}
+	 */	
+	this.joinGame = function(gameName) {
+		gameName.player_two = this.username;
+	};
+
+};
 
 
 /**
@@ -112,13 +200,7 @@ function boat (name, size) {
 * Contains all the different methods and variables for the battleship game
 * @param {string} player Player name
 */
-function battleship(player) {
-
-	/**
-	 * Player name
-	 * @type {string}
-	 */
-	this.player = player;
+function battleship() {
 
 	/** This is the main grid for the game
 	* @this {battleship}

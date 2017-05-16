@@ -5,6 +5,7 @@ var app = express();
 var ejs = require('ejs');
 var bodyParser = require('body-parser');
 var path = require('path');
+var sess = require('express-session');
 var server  = require('http').createServer(app);
 var io = require('socket.io')(server);
 
@@ -36,6 +37,7 @@ var battleship_1 = require('./routes/initialization').battleship_1;
 app.get('/', function (req, res) {
   res.render('index', {'battleship':battleship_1});
 });
+
 
 io.on('connection', function (socket) {
   socket.emit('news', { hello: 'world' });
