@@ -1,86 +1,62 @@
-/* Require Dependencies */
-var express = require('express');
+/****************************   Require Dependencies ************************************/
 
-/* Initialize express for easy server-client relationship */
-var app = express();
-
-// ejs for writing and generating templates
-var ejs = require('ejs');
-
-// BodyParser for easy client-server communication
-var bodyParser = require('body-parser');
-var path = require('path');
-
-// Socket.io for bilateral communication between server and client (tunnel)
-var server  = require('http').createServer(app);
-var io = require('socket.io')(server);
-
-// Session that follows client IMPORTANT do not set secure to true
+var express = require('express'); // Express to handle client requests and server responses
+var ejs = require('ejs'); // ejs for writing and generating templates
+var bodyParser = require('body-parser'); // BodyParser for easy client-server communication
+var path = require('path'); // Path module for directory naviguation
+var http = require('http'); // http needed for socket.io
+var socket = require('socket.io'); // Socket.io is needed for synchronous communication between client and server
+var sharedsession = require("express-socket.io-session"); // Shared session for socket.io
 var session = require("express-session")({
   secret: "ZEHIU5348TQG8VT4VUJEZYSY483YA",
   resave: true,
   saveUninitialized: true
-});
+}); // Session that follows client IMPORTANT do not set secure to true
 
-// Shared session fro socket.io
-var sharedsession = require("express-socket.io-session");
 
-// Use express-session middleware for express
-app.use(session);
-// Use shared session middleware for socket.io
-// setting autoSave:true
-io.use(sharedsession(session, {
-    autoSave:true
-}));
+/********************* Initialize express, session, bodyparser and template engine *********************/
 
-/* Define Port 8080 by default */
-var port = 8080;
+var app = express();
+
+var server = http.createServer(app); // create server to listen to
+
+app.use(session); // Use express-session middleware for express
+
+var port = 8080; // Define Port 8080 by default 
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
-// Template views and language
 app.use(express.static('static'));
-app.set('views', path.join(__dirname,'views'));
-app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname,'views')); //All ejs files are in the views folder
+app.set('view engine', 'ejs'); // Use ejs as default template engine
 
-// include routes
+
+/************************************************* Socket.io *************************************************/
+
+var io = socket(server);
+
+// Use shared session middleware for socket.io
+io.use(sharedsession(session, {
+    autoSave:true  // setting autoSave:true
+}));
+
+//Export the io module to use it in other js files
+module.exports = io;
+
+/*************************************** include routes *****************************************************/
+
 var initialization = require('./routes/initialization').router;
 app.use('/initialization', initialization);
 var game = require('./routes/game');
 app.use('/game', game);
-// var test = require('./routes/test').router;
-// app.use('/test', test);
-
-//Import battleship grids
-var battleship_1 = require('./routes/initialization').battleship_1;
+var test = require('./routes/test');
+app.use('/test', test);
 
 // Main route
 app.get('/', function (req, res) {
-  var sess = req.session;
-  console.log(sess);
-  res.render('index', {'battleship':battleship_1});
+  res.render('welcome');
 });
 
-
-io.sockets.on('connection', function (socket) {
-  socket.on("login", function(pseudo, callback) {
-    socket.handshake.session.test = "test";
-    socket.handshake.session.pseudo = pseudo;
-    socket.handshake.session.save();
-    console.log(socket.handshake.session);
-  });
-  console.log('Un client est connecté !');
-  socket.emit('message', 'Tu es biezn connecté');
-  socket.broadcast.emit('message', 'un autre se connecte !');
-  // Quand le serveur reçoit un signal de type "message" du client
-  socket.on('message', function (message) {
-    console.log(socket.handshake.session);
-    //console.log(socket.handshake.session.pseudo + ' me parle ! Il me dit : ' + message);
-  });
-});
-
-
-
-// Initialize server
+/**************************************** Listen server *******************************************************/
 server.listen(port);
