@@ -14,6 +14,7 @@ var session = require("express-session")({
 }); // Session that follows client IMPORTANT do not set secure to true
 
 
+
 /********************* Initialize express, session, bodyparser and template engine *********************/
 
 var app = express();
@@ -51,6 +52,8 @@ module.exports = {
 
 var initialization = require('./routes/initialization');
 app.use('/initialization', initialization);
+var join = require('./routes/join');
+app.use('/join', join);
 var createGame = require('./routes/createGame');
 app.use('/createGame', createGame);
 var game = require('./routes/game');
