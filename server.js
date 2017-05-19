@@ -46,7 +46,7 @@ module.exports = io;
 
 /*************************************** include routes *****************************************************/
 
-var initialization = require('./routes/initialization').router;
+var initialization = require('./routes/initialization');
 app.use('/initialization', initialization);
 var createGame = require('./routes/createGame');
 app.use('/createGame', createGame);

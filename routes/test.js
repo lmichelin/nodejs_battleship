@@ -1,5 +1,6 @@
 //Require express and other dependencies
 var express = require('express');
+var battleship = require('../gamejs/battleship.js').battleship;
 
 //Create router object
 var router = express.Router();
@@ -8,7 +9,7 @@ var router = express.Router();
 var io = require('../server.js');
 
 //Import battleship grids
-var battleship_1 = require('./initialization').battleship_1;
+var battleship_1 = new battleship('player_one');
 
 // Main route
 router.get('/', function (req, res) {
