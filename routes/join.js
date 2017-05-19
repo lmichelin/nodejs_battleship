@@ -1,7 +1,7 @@
 /************************************* Require dependencies **********************************************/
 
 var express = require('express');
-var io = require('../server.js');
+var io = require('../server.js').io;
 var router = express.Router(); //Create router object
 
 /************************************* Join routes *********************************************************/

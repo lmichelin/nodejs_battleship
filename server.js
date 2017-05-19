@@ -41,8 +41,11 @@ io.use(sharedsession(session, {
     autoSave:true  // setting autoSave:true
 }));
 
-//Export the io module to use it in other js files
-module.exports = io;
+//Export the server and io modules to use it in other js files
+module.exports = {
+	server: server,
+	io: io
+}
 
 /*************************************** include routes *****************************************************/
 
@@ -62,3 +65,5 @@ app.get('/', function (req, res) {
 
 /**************************************** Listen server *******************************************************/
 server.listen(port);
+
+console.log(io);

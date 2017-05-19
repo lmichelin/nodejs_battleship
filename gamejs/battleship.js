@@ -48,27 +48,31 @@ function player(username) {
 	 */
 	this.username = username;
 
+	/**
+	 * Game played by the player
+	 * @type {string}
+	 * @default null
+	 * @this {player}
+	 */
+	this.game = null;
+
 
 	/**
 	 * Create new multiplayer game function
 	 * @param  {String} gameName Name of the game
 	 * @this {player}
-	 * @return {game}          New game
 	 */
 	this.createMultiplayerGame = function(gameName) {
-		var result = new game(gameName, this.username);
-		return result;
+		this.game = new game(gameName, this.username);
 	};
 
 	/**
 	 * Create solo game function
-	 * @return {game} new solo game object
 	 * @this {player}
 	 */
 	this.createSoloGame = function() {
-		var result = new game('solo', this.username);
-		result.gameType = 'solo';
-		return result;
+		this.game = new game('solo', this.username);
+		this.game.gameType = 'solo';
 	};
 
 	/**
@@ -381,4 +385,4 @@ function isZoneAvailable(coordinates, currentGrid) {
 	return true;
 };
 
-module.exports = {battleship, boat};
+module.exports = {battleship, player, boat};
