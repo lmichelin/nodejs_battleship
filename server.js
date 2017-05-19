@@ -48,6 +48,8 @@ module.exports = io;
 
 var initialization = require('./routes/initialization').router;
 app.use('/initialization', initialization);
+var createGame = require('./routes/createGame');
+app.use('/createGame', createGame);
 var game = require('./routes/game');
 app.use('/game', game);
 var test = require('./routes/test');
