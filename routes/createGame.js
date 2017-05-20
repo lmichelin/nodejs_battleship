@@ -21,6 +21,7 @@ router.post('/', function(req, res) {
 
 	req.session.player = new player(username); //Save player object in his session
 	req.session.player.createMultiplayerGame(gameName); // Create new game
+	req.session.save();
 
 
 

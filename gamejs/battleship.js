@@ -22,9 +22,19 @@ function game(name, player_one) {
 
 	/**
 	 * Second player object
+	 * @this {game}
 	 * @type {player}
 	 */
 	this.player_two = null;
+
+	/**
+	 * Checks whether a game is available to join
+	 * @return {Boolean} True if available, false otherwise
+	 * @this {game}
+	 */
+	this.isAvailable = function() {
+		return player_two == null;
+	};
 
 	/**
 	 * Typer of the game can be 'multi' or 'solo'
@@ -87,11 +97,12 @@ function player(username) {
 
 	/**
 	 * Join game function (a user who did not create a game must join)
-	 * @param  {String} gameName game Name that has already been created
+	 * @param  {game} game game that has already been created
 	 * @this {player}
 	 */	
-	this.joinGame = function(gameName) {
-		gameName.player_two = this.username;
+	this.joinGame = function(game) {
+		this.game = game;
+		this.game.player_two = this.username;
 	};
 
 };
@@ -385,4 +396,6 @@ function isZoneAvailable(coordinates, currentGrid) {
 	return true;
 };
 
-module.exports = {battleship, player, boat};
+
+
+module.exports = {battleship, player};

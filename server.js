@@ -68,5 +68,3 @@ app.get('/', function (req, res) {
 
 /**************************************** Listen server *******************************************************/
 server.listen(port);
-
-console.log(io);
