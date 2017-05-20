@@ -1,7 +1,7 @@
 /************************************* Require dependencies **********************************************/
 
 var express = require('express');
-var player = require('../gamejs/battleship.js').player;
+var gameServer = require('../server.js').gameServer;
 var io = require('../server.js').io;
 
 var router = express.Router(); //Create router object
@@ -18,11 +18,13 @@ router.post('/', function(req, res) {
 	var username = req.body.username;
 	var gameName = req.body.gameName;
 
-
-	req.session.player = new player(username); //Save player object in his session
-	req.session.player.createMultiplayerGame(gameName); // Create new game
+	// Add new player
+	req.session.username = username; //Save player username in his session
 	req.session.save();
+	gameServer.newPlayer(username);
 
+	//Create Game
+	gameServer.createMultiplayerGame(gameName, gameServer.players[username]);
 
 
 	res.redirect('/initialization'); //Redirect to waiting area for another player to join the game !

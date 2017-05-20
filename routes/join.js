@@ -1,6 +1,7 @@
 /************************************* Require dependencies **********************************************/
 
 var express = require('express');
+var gameServer = require('../server.js').gameServer;
 var io = require('../server.js').io;
 var router = express.Router(); //Create router object
 
@@ -8,16 +9,21 @@ var router = express.Router(); //Create router object
 
 router.get('/', function(req, res) {
 	res.render('join');
-	for (key in io.sockets.connected) {
-		console.log(io.sockets.connected[key].handshake.session);	
-	}
+
 
 	io.sockets.on('connection', function(socket) {
-		// console.log(socket.handshake.session.player);
-		// if (socket.handshake.session.player.game.player_two == null) {
+
+		var username = socket.handshake.session.username;
+		var player = gameServer.players[username];
+		var games = gameServer.games;
+
+	    var availableGames = gameServer.getAvailableGames();
+	    console.log(availableGames);
+		socket.emit('listGames', availableGames);
+		// if (player.game.player_two == null) {
 		// 	status_message = "Waiting for other player to join the game ...";
 		// } else {
-		// 	status_message = socket.handshake.session.player.game.player_two.username + " is connected !";
+		// 	status_message = player.game.player_two.username + " is connected !";
 		// }
 		// socket.emit('status', status_message);
 

@@ -12,6 +12,7 @@ var session = require("express-session")({
   resave: true,
   saveUninitialized: true
 }); // Session that follows client IMPORTANT do not set secure to true
+var gameServer = require('./gamejs/battleship.js').gameServer;
 
 
 
@@ -33,6 +34,11 @@ app.set('views', path.join(__dirname,'views')); //All ejs files are in the views
 app.set('view engine', 'ejs'); // Use ejs as default template engine
 
 
+/******************************************** Initialize gameServer ******************************************/
+
+var gameServer = new gameServer();
+
+
 /************************************************* Socket.io *************************************************/
 
 var io = socket(server);
@@ -42,11 +48,15 @@ io.use(sharedsession(session, {
     autoSave:true  // setting autoSave:true
 }));
 
+
+/******************************************** Export relevant objects ***************************************/
+
 //Export the server and io modules to use it in other js files
 module.exports = {
 	server: server,
-	io: io
-}
+	io: io,
+	gameServer: gameServer
+};
 
 /*************************************** include routes *****************************************************/
 

@@ -11,10 +11,17 @@
 
 <h1 class="text-center">The Battleship Game</h1>
 
+<div id='field'></div>
+
   <script src="/socket.io/socket.io.js"></script>
   <script src="script.js"></script>
   <script>
   	var socket = io.connect('/');
+  	socket.on('listGames', function(availableGames) {
+    	var field = document.getElementById("field");
+		field.innerHTML = JSON.stringify(availableGames);
+		console.log(availableGames);
+	});
   </script>
 </body>
 </html>

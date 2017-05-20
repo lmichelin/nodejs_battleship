@@ -1,8 +1,98 @@
 /**
+ * Main server object: Responsible for all game and player management.
+ * @class gameServer class
+ */
+function gameServer() {
+
+	/**
+	 * List of all the games
+	 * @type {Object}
+	 * @this {gameServer}
+	 */
+	this.games = {};
+
+	/**
+	 * Create multiplayer game
+	 * @param  {String} gameName   Name of the game
+	 * @param  {player} player_one Player who created the game
+	 * @this {gameServer}
+	 */
+	this.createMultiplayerGame = function(gameName, player_one) {
+		this.games[gameName] = new game(gameName, player_one);
+		player_one.game = this.games[gameName];
+	};
+
+	/**
+	 * Create a solo player game
+	 * @param  {player} player_one Player object who will play the game
+	 * @this {gameServer}
+	 */
+	this.createSoloGame = function(player_one) {
+		this.games[player_one] = new game(player_one, player_one);
+		this.games[player_one].gameType = 'solo'; // Set gameType to solo
+	};
+
+	/**
+	 * Remove all reference to that game
+	 * @param  {String} gameName Name of the game to be removed
+	 * @this {gameServer}
+	 */
+	this.removeGame = function(gameName) {
+		delete this.games[gameName];
+	};
+
+	/**
+	 * Filter all available games
+	 * Be careful it returns a new type of dictionary with the name of the game and the player_one username
+	 * @return {object} Dictionary of all available games
+	 */
+	this.getAvailableGames = function() {
+		newDict = {};
+		for (var element in this.games) {
+			if (this.games[element].isAvailable()) {
+				newDict[element] = {
+					'name': this.games[element].name,
+					'player_one': this.games[element].player_one.username
+				};
+			}
+		}
+		return newDict;
+	};
+
+	/**
+	 * Dictionary of all the active players of the game
+	 * @type {Object}
+	 * @this {gameServer}
+	 */
+	this.players = {};
+
+	/**
+	 * Add new player to players dictionary
+	 * @param  {String} username Username of the player
+	 * @this {gameServer}
+	 */
+	this.newPlayer = function(username) {
+		this.players[username] = new player(username);
+	};
+
+	/**
+	 * Remove player from players dictionary
+	 * @param  {String} username Name of the player to be removed
+	 * @this {gameServer}
+	 */
+	this.removePlayer = function(username) {
+		delete this.players[username];
+	}
+
+	this.AIs = {};
+
+}
+
+/**
  * Main game object
  * @class Game class
  * @param  {string} name       Name of the game
- * @param  {player object} player_one First player to have created the game
+ * @param  {player object} player_one Player who created the game
  */
 function game(name, player_one) {
 
@@ -28,12 +118,12 @@ function game(name, player_one) {
 	this.player_two = null;
 
 	/**
-	 * Checks whether a game is available to join
+	 * Checks whether a game is available to join (for multiplayer ONLY)
 	 * @return {Boolean} True if available, false otherwise
 	 * @this {game}
 	 */
 	this.isAvailable = function() {
-		return player_two == null;
+		return this.player_two == null && this.gameType == 'multi';
 	};
 
 	/**
@@ -59,33 +149,6 @@ function player(username) {
 	this.username = username;
 
 	/**
-	 * Game played by the player
-	 * @type {string}
-	 * @default null
-	 * @this {player}
-	 */
-	this.game = null;
-
-
-	/**
-	 * Create new multiplayer game function
-	 * @param  {String} gameName Name of the game
-	 * @this {player}
-	 */
-	this.createMultiplayerGame = function(gameName) {
-		this.game = new game(gameName, this.username);
-	};
-
-	/**
-	 * Create solo game function
-	 * @this {player}
-	 */
-	this.createSoloGame = function() {
-		this.game = new game('solo', this.username);
-		this.game.gameType = 'solo';
-	};
-
-	/**
 	 * Create battleship object for the user containing all the boats and grids
 	 * @return {battleship} battleship object containing all grid information
 	 * @this {player}
@@ -94,6 +157,13 @@ function player(username) {
 		var result = new battleship();
 		return result;
 	};
+
+	/**
+	 * Game object that the user is playing 
+	 * @type {game}
+	 * @this {player}
+	 */
+	this.game = null;
 
 	/**
 	 * Join game function (a user who did not create a game must join)
@@ -398,4 +468,4 @@ function isZoneAvailable(coordinates, currentGrid) {
 
 
 
-module.exports = {battleship, player};
+module.exports = {battleship, gameServer};
