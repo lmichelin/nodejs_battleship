@@ -12,6 +12,8 @@ var session = require("express-session")({
   resave: true,
   saveUninitialized: true
 }); // Session that follows client IMPORTANT do not set secure to true
+var gameServer = require('./gamejs/battleship.js').gameServer;
+
 
 
 /********************* Initialize express, session, bodyparser and template engine *********************/
@@ -28,8 +30,14 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
 app.use(express.static('static'));
+app.use('/node_modules', express.static(__dirname + '/node_modules')); // animate css
 app.set('views', path.join(__dirname,'views')); //All ejs files are in the views folder
 app.set('view engine', 'ejs'); // Use ejs as default template engine
+
+
+/******************************************** Initialize gameServer ******************************************/
+
+var gameServer = new gameServer();
 
 
 /************************************************* Socket.io *************************************************/
@@ -41,13 +49,22 @@ io.use(sharedsession(session, {
     autoSave:true  // setting autoSave:true
 }));
 
-//Export the io module to use it in other js files
-module.exports = io;
+
+/******************************************** Export relevant objects ***************************************/
+
+//Export the server and io modules to use it in other js files
+module.exports = {
+	server: server,
+	io: io,
+	gameServer: gameServer
+};
 
 /*************************************** include routes *****************************************************/
 
 var initialization = require('./routes/initialization');
 app.use('/initialization', initialization);
+var join = require('./routes/join');
+app.use('/join', join);
 var createGame = require('./routes/createGame');
 app.use('/createGame', createGame);
 var game = require('./routes/game');

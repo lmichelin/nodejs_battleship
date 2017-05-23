@@ -1,7 +1,9 @@
 /************************************* Require dependencies **********************************************/
 
 var express = require('express');
-var io = require('../server.js');
+var gameServer = require('../server.js').gameServer;
+var io = require('../server.js').io;
+
 var router = express.Router(); //Create router object
 
 /************************************* createGame routes *********************************************************/
@@ -12,15 +14,21 @@ router.get('/', function(req, res) {
 
 // Post the information about the user and the game that the user wants to create
 router.post('/', function(req, res) {
+	// Get all the form elements
 	var username = req.body.username;
 	var gameName = req.body.gameName;
 
-	console.log('username and gameName have been successfully posted');
+	// Add new player
+	req.session.username = username; //Save player username in his session
+	req.session.save();
+	gameServer.newPlayer(username);
 
-	req.session.username = username;
+	//Create Game
+	gameServer.createMultiplayerGame(gameName, gameServer.players[username]);
+	io.emit('listGames', gameServer.availableGames);
 
 
-	res.send("It works well: " + username + " " + gameName + " " + req.session.username);
+	res.redirect('/initialization'); //Redirect to waiting area for another player to join the game !
 });
 
 module.exports = router;

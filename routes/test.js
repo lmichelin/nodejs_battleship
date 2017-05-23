@@ -6,7 +6,7 @@ var battleship = require('../gamejs/battleship.js').battleship;
 var router = express.Router();
 
 //Get socket.io
-var io = require('../server.js');
+var io = require('../server.js').io;
 
 //Import battleship grids
 var battleship_1 = new battleship('player_one');
