@@ -17,7 +17,7 @@ router.get('/', function(req, res) {
 	}
 });
 
-router.post('/', function(req, res) {
+router.post('/login', function(req, res) {
 	// Get all the form elements
 	var username = req.body.username;
 

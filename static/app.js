@@ -31,17 +31,11 @@ var listGames = new Vue({
 				alert('Please choose a game from the list');
 			}
 			else {
-				this.$http.post('/join/game', {picked: this.picked},
-					function(response) {
-						alert(response);
-						// window.location.href = data.redirect;
-						// console.log(data);
-				});
+				this.$http.post('/join/game', {picked: this.picked})
+					.then(function(response) {
+						window.location.href = response.data.redirect;
+					});
+				}
 			}
 		}
-	}
 	});
-
-// $("#button").click(function() {
-//     $.post("/game", {gameName})
-// });
