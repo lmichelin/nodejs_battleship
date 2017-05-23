@@ -20,6 +20,18 @@ function gameServer() {
 	this.createMultiplayerGame = function(gameName, player_one) {
 		this.games[gameName] = new game(gameName, player_one);
 		player_one.game = this.games[gameName];
+		this.updateAvailableGames();
+	};
+
+	/**
+	 * Player two joins a multiplayer game
+	 * @param  {String} gameName   Name of thee game be joined	
+	 * @param  {player} player_two Player who wishes to join the game
+	 * @this {gameServer}
+	 */
+	this.joinMultiplayerGame = function(gameName, player_two) {
+		player_two.game = this.games[gameName];
+		this.games[gameName].player_two = player_two; 
 	};
 
 	/**
@@ -41,12 +53,14 @@ function gameServer() {
 		delete this.games[gameName];
 	};
 
+	this.availableGames = {}
+
 	/**
-	 * Filter all available games
+	 * Updates all available games by filtering the games object
 	 * Be careful it returns a new type of dictionary with the name of the game and the player_one username
-	 * @return {object} Dictionary of all available games
+	 * @this {gameServer}
 	 */
-	this.getAvailableGames = function() {
+	this.updateAvailableGames = function() {
 		newDict = {};
 		for (var element in this.games) {
 			if (this.games[element].isAvailable()) {
@@ -56,7 +70,7 @@ function gameServer() {
 				};
 			}
 		}
-		return newDict;
+		this.availableGames = newDict;
 	};
 
 	/**

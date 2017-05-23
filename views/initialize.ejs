@@ -18,7 +18,6 @@
   <script src="script.js"></script>
   <script>
   	var socket = io.connect('/');
-  	console.log('you are connected with the server');
   	socket.on('status', function(status_message) {
     	var message = status_message;
     	var field = document.getElementById("field");

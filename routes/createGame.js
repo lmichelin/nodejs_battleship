@@ -25,6 +25,7 @@ router.post('/', function(req, res) {
 
 	//Create Game
 	gameServer.createMultiplayerGame(gameName, gameServer.players[username]);
+	io.emit('listGames', gameServer.availableGames);
 
 
 	res.redirect('/initialization'); //Redirect to waiting area for another player to join the game !

@@ -30,6 +30,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
 app.use(express.static('static'));
+app.use('/node_modules', express.static(__dirname + '/node_modules')); // animate css
 app.set('views', path.join(__dirname,'views')); //All ejs files are in the views folder
 app.set('view engine', 'ejs'); // Use ejs as default template engine
 
