@@ -24,7 +24,7 @@ var server = http.createServer(app); // create server to listen to
 
 app.use(session); // Use express-session middleware for express
 
-var port = 8080; // Define Port 8080 by default 
+var port = 8000; // Define Port 8080 by default 
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
