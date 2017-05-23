@@ -16,6 +16,7 @@ module.exports = router;
 
 /*********************************** Socket io ************************************************************/
 
+
 io.sockets.on('connection', function(socket) {
 	
 	var username = socket.handshake.session.username;

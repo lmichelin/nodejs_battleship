@@ -17,7 +17,7 @@
   <script src="/socket.io/socket.io.js"></script>
   <script src="script.js"></script>
   <script>
-  	var socket = io.connect('/');
+  	var socket = io.connect();
   	socket.on('status', function(status_message) {
     	var message = status_message;
     	var field = document.getElementById("field");

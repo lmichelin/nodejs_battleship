@@ -58,6 +58,7 @@ router.post('/game', function(req, res, callback) {
 
 /************************************** Socket io ************************************************************/
 
+
 io.sockets.on('connection', function(socket) {
 		var username = socket.handshake.session.username;
 		var player = gameServer.players[username];

@@ -25,6 +25,7 @@ router.post('/', function(req, res) {
 
 	//Create Game
 	gameServer.createMultiplayerGame(gameName, gameServer.players[username]);
+	//Send the updated version of all available games to the other users
 	io.emit('listGames', gameServer.availableGames);
 
 
