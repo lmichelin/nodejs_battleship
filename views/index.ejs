@@ -78,19 +78,10 @@
 
   </p>
 
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="script.js"></script>
 
   <script>
 
   var battleship = JSON.parse('<%-JSON.stringify(battleship)%>');
-
-  var socket = io.connect('/');
-  // var pseudo = prompt('Quel est votre pseudo ?');
-  // socket.emit('petit_nouveau', pseudo);
-  socket.on('message', function(message) {
-    console.log('Le serveur a un message pour vous : ' + message);
-  })
 
   $('#poke').click(function () {
     socket.emit('message', 'Salut serveur, ça va ?');

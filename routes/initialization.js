@@ -16,7 +16,7 @@ module.exports = router;
 
 /*********************************** Socket io ************************************************************/
 
-
+// This code will execute when the user refreshes the page ...
 io.sockets.on('connection', function(socket) {
 	
 	var username = socket.handshake.session.username;

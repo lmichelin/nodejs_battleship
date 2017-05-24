@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="/css/stylesheet.css">
+  <title>The Battleship Game</title>
+</head>
+<body>
+
+<div id="boats">
+
+<h1 class="text-center">The Battleship Game</h1>
+<div class="col-md-6">
+    <h3>Drag&drop your boats :</h3>
+
+<div v-for='boat in battleship.boats' :key='boat.name'>
+    <div class="divTable" style="border: 1px solid #000;">
+        <div class="divTableBody">
+            <div class="divTableRow">
+                <div v-for='cell in boat.size' class="divTableCell">&nbsp;</div>
+            </div>
+        </div>
+    </div>
+    <br />
+</div>
+
+<button type="button" class="btn btn-info">Rotate</button>
+
+</div>
+
+
+    <div class="col-md-6">
+      <table id="grid" style="width:auto; margin:auto; border:none;">
+        <tbody>
+          <tr>
+            <td style="border:none; width:45px;"></td>
+            <% for (var i = 0; i < battleship.grid.length; i++) {%>
+            <td style="text-center; border:none; display: inline-block; width:45px; text-align:center; vertical-align:bottom;"><%=String.fromCharCode(65+i)%></td>
+            <% } %>
+          </tr>
+          <% for (var i = 0; i < battleship.grid.length; i++) {%>
+            <tr value="<%=i%>">
+            <td style="border:none; text-align:right; vertical-align:middle;">
+            <%=i+1%>&nbsp;
+            </td>
+            <% for (var j = 0; j < battleship.grid[i].length; j++) {%>
+            <td value="<%=j%>" type="button" onclick="action($(this).parent().attr('value'), $(this).attr('value'))" style="padding:0; border-radius:0; height:45px; width:45px;" class="case btn btn-default"></td>
+              <% } %>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+
+</div>
+
+    
+    <!-- JS -->
+  <script src="/node_modules/vue/dist/vue.js"></script>
+  <script src="/node_modules/vue-resource/dist/vue-resource.js"></script>  
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/setBoat.js"></script>
+</body>
+</html>

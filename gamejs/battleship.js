@@ -163,14 +163,10 @@ function player(username) {
 	this.username = username;
 
 	/**
-	 * Create battleship object for the user containing all the boats and grids
-	 * @return {battleship} battleship object containing all grid information
-	 * @this {player}
+	 * Battleship object for the player
+	 * @type {battleship}
 	 */
-	this.createBattleship = function() {
-		var result = new battleship();
-		return result;
-	};
+	this.battleship = new battleship();
 
 	/**
 	 * Game object that the user is playing 
@@ -405,24 +401,41 @@ function battleship() {
 	this.isTurn = false;
 
 	/**
-	 * Sets boat on grid
-	 * @param {object boat} boat Boat object
-	 * @this {battleship}
+	 * Checks if boat position is valid before setting the boat
+	 * @param {String} boat_name name of the boat
+	 * @return {errors} null if no errors, errors if errors
 	 */
-	this.setBoat = function (boat) {
+	this.positionIsNotValid = function(boat) {
+		var boat = this.boats[boat_name];
+		var errors = [];
 		if (boat.isSet) {
-			console.error(boat.name + ' is already set on grid');
+			errors.push(boat.name + ' is already set on grid')
 		}
 		if (boat.coordinatesList[boat.size-1] == [0,0]) {
-			console.error(boat.name + 'coordinatesList are not set ...')
+			errors.push(boat.name + 'coordinatesList are not set ...')
 		}
 		for (var i = 0; i < boat.coordinatesList.length; i++) {
 			if (!isInGrid(boat.coordinatesList[i])) {
-				console.error(boat.name + 'is not in grid')
+				errors.push(boat.name + 'is not in grid')
 			}
 			if (!isZoneAvailable(boat.coordinatesList[i], this.grid)) {
-				console.error('Zone error,' + boat.name + 'will be too close to another ship')
+				errors.push('Zone error,' + boat.name + 'will be too close to another ship')
 			}
+		}
+		if (errors.length == 0) {
+			return null;
+		}
+		return errors;
+	};
+
+	/**
+	 * Sets boat on grid
+	 * @param {String} boat Boat name
+	 * @this {battleship}
+	 */
+	this.setBoat = function (boat) {
+		if (this.positionIsNotValid(boat)) {
+			throw new Error({message: 'Position is not valid'});
 		}
 		switch (boat.direction) {
 			case 'down':
