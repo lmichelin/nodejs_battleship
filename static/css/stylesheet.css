@@ -1,7 +1,7 @@
 /* Table with divs */
 .divTable{
 	display: table;
-	width: 100%;
+	border: none;
 }
 .divTableRow {
 	display: table-row;
@@ -11,9 +11,11 @@
 	display: table-header-group;
 }
 .divTableCell, .divTableHead {
-	border: 1px solid #999999;
+	border: 1px solid #ccc;
 	display: table-cell;
-	padding: 3px 10px;
+	padding: 0px;
+	width: 45px;
+	height: 45px;
 }
 .divTableHeading {
 	background-color: #EEE;
@@ -27,4 +29,29 @@
 }
 .divTableBody {
 	display: table-row-group;
+	width: auto;
+}
+
+.title {
+	margin-top: 2%;
+}
+
+.boatsTable {
+	z-index: 1;
+	/*margin-left: 30%;*/
+}
+
+.setBoatsTable {
+	margin-top: 10%;
+}
+
+.boatsTable > .divTableBody > .divTableRow > .divTableCell {
+	background-color: blue;
+}
+.center {
+	margin-left: auto;
+	margin-right: auto;
+}
+.no-padding {
+	padding: 0;
 }
