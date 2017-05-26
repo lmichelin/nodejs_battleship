@@ -16,6 +16,8 @@
 	padding: 0px;
 	width: 45px;
 	height: 45px;
+	min-width: 45px;
+	min-height: 45px;
 }
 .divTableHeading {
 	background-color: #EEE;

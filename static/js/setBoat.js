@@ -19,7 +19,7 @@ var boats = new Vue({
 
         // Initialize drag and drop 500 ms after page load (IMPORTANT for Firefox compatibility)
         $(document).ready(function() {
-            window.setTimeout(boats.initializeDragAndDrop(), 500);
+            window.setTimeout(boats.initializeDragAndDrop(), 1000);
         });
     },
 
@@ -52,8 +52,6 @@ var boats = new Vue({
         initializeDragAndDrop: function() {
             this.makeDraggable();
             this.makeDroppable();
-            // var test = $("#grid").offset();
-            // console.log(test);
         },
 
         // match boat cell with grid cell ...
@@ -74,4 +72,29 @@ var boats = new Vue({
             console.log(String.fromCharCode(64 + j), i, j);
         }
     },
+});
+
+function myFunction() {
+
+    $('.draggable').draggable({
+        //containment : '#grid',
+        snap: '.case',
+        grid: [43, 43],
+        revert: 'invalid'
+    });
+
+    $('#grid').droppable({ // ce bloc servira de zone de dépôt
+        drop: function(event, ui) {
+            var pos_left = ui.draggable.offset().left;
+            var pos_top = ui.draggable.offset().top;
+            console.log(pos_left, pos_top);
+            // var pos = $("#grid > .divTableBody > .divTableRow[value='" + 5 + "']").offset().top;
+            // console.log(pos);
+            boats.findCase(pos_left, pos_top);
+        }
+    });
+}
+
+$(document).ready(function() {
+    window.setTimeout(myFunction, 500);
 });
