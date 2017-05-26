@@ -39,7 +39,10 @@
     <div class="col-sm-6 text-center no-padding">
         <div id='grid' class="divTable center setBoatsTable">
             <div class="divTableBody">
+                <div class="divTableHeading divTableCell"></div>
+                <div v-for='col in battleship.grid.length' :value="col" class="divTableHeading divTableCell">{{String.fromCharCode(64+col)}}</div>
                 <div v-for='row in battleship.grid.length' :value="row" class="divTableRow">
+                    <div class="divTableHeading divTableCell">{{row}}</div>
                     <div v-for='cell in battleship.grid.length' :value='cell' class="divTableCell case">&nbsp;</div>
                 </div>
             </div>
