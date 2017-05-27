@@ -304,7 +304,7 @@ function battleship() {
 	this.grid =  [
 		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-		[0, 0, 1, 1, 1, 1, 1, 0, 0, 0],
+		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -405,15 +405,9 @@ function battleship() {
 	 * @param {String} boat_name name of the boat
 	 * @return {errors} null if no errors, errors if errors
 	 */
-	this.positionIsNotValid = function(boat) {
+	this.positionIsNotValid = function(boat_name) {
 		var boat = this.boats[boat_name];
 		var errors = [];
-		if (boat.isSet) {
-			errors.push(boat.name + ' is already set on grid')
-		}
-		if (boat.coordinatesList[boat.size-1] == [0,0]) {
-			errors.push(boat.name + 'coordinatesList are not set ...')
-		}
 		for (var i = 0; i < boat.coordinatesList.length; i++) {
 			if (!isInGrid(boat.coordinatesList[i])) {
 				errors.push(boat.name + 'is not in grid')
@@ -457,7 +451,7 @@ function battleship() {
 
 
 /**
- * Test to check wether the boat can be placed on these coordinates
+ * Test to check wether these coordinates can be placed on the grid
  * @param  {tuple}  coordinates coordinates of the zone
  * @return {Boolean}
  */
