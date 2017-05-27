@@ -127,8 +127,8 @@ var boats = new Vue({
             this.setBoatCoordinatesList(boat_name);
 
             
-            console.log('Boat position: ' + boat.coordinates + ' ' + boat.direction);
-            console.log('Boat coordinatesList: ' + boat.coordinatesList);
+            // console.log('Boat position: ' + boat.coordinates + ' ' + boat.direction); // FOR DEBUGS
+            // console.log('Boat coordinatesList: ' + boat.coordinatesList); // FOR DEBUG
             for (var i = 0; i < boat.coordinatesList.length; i++) {
                 if (!this.isInGrid(boat.coordinatesList[i])) {
                     errors.push(boat.name + ' is not in grid');
@@ -207,7 +207,7 @@ var boats = new Vue({
             for (var i = x-1; i <= x+1; i++) {
                 for (var j = y-1; j <= y+1; j++) {
                     if (i>=0 && i<=9 && j>=0 && j<=9) {
-                        // console.log(this.battleship.grid[i][j]);
+                        console.log(this.battleship);
                         if (this.battleship.grid[i][j] != 0) {
                             console.log('it returned false !!');
                             return false;
@@ -218,11 +218,14 @@ var boats = new Vue({
             return true;
         },
 
-
+        /**
+         * Set the boat on the battleship grid ... This will set the isSet variable of the boat to true !
+         * @param {String} boat_name The name of the boat that will be set on the grid
+         */
         setBoatOnGrid: function(boat_name) {
             var boat = this.battleship.boats[boat_name];
             for (var i = 0; i < boat.size; i++) {
-                this.battleship.grid[boat.coordinatesList[i][0], boat.coordinatesList[i][1]] = 1;
+                this.battleship.grid[boat.coordinatesList[i][0]][boat.coordinatesList[i][1]] = 1;
             }
             boat.isSet = true;
         },
