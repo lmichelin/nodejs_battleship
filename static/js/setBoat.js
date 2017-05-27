@@ -27,10 +27,11 @@ var boats = new Vue({
         //Make the boats draggable
         makeDraggable: function() {
             $('.draggable').draggable({
-                //containment : '#grid',
+                containment : 'document',
                 snap: '.case',
-                grid: [43, 43],
-                revert: 'invalid'
+                grid: [45, 45],
+                snapMode: 'inner',
+                revert : 'invalid',
             });
         },
 
@@ -38,10 +39,10 @@ var boats = new Vue({
         makeDroppable: function() {
             $('#grid').droppable({ // ce bloc servira de zone de dépôt
                 drop: function(event, ui) {
-                    var pos_left = ui.draggable.offset().left;
-                    var pos_top = ui.draggable.offset().top;
-                    console.log(pos_left, pos_top);
-                    // var pos = $("#grid > .divTableBody > .divTableRow[value='" + 5 + "']").offset().top;
+                    var pos_left = ui.offset.left;
+                    var pos_top = ui.offset.top;
+                    // console.log(pos_left, pos_top);
+                    // var pos = $("#grid").offset(); 
                     // console.log(pos);
                     boats.findCase(pos_left, pos_top);
                 }
@@ -64,7 +65,7 @@ var boats = new Vue({
             }
             for (var j = 1; j <= this.battleship.grid.length; j++) {
                 var pos_left = $("#grid > .divTableBody > .divTableRow[value='" + i + "'] > .divTableCell[value='" + j + "']").offset().left;
-                console.log(left, pos_left, top, pos_top);
+                //console.log(left, pos_left, top, pos_top);
                 if (pos_left == left) {
                     break;
                 }
