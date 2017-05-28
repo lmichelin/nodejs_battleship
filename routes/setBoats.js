@@ -42,36 +42,55 @@ router.get('/getBoats', function(req, res) {
 });
 
 
-router.post('/sendBoat', function(req, res) {
+router.post('/sendBoats', function(req, res) {
+	console.log('post request ok');
 	// Get all the form elements
-	var username = req.body.username;
-	var boat = req.body.boat;
+	var sentBoats = req.body.boats;
+	var username = req.session.username;
 
-	//Get the player battleship object
+	//Get the player battleship and boat objects
 	var battleship = gameServer.players[username].battleship;
+	var boats = battleship.boats;
 
-	if (battleship.positionIsNotValid(boat)) {
-		var errors = battleship.positionIsNotValid(boat);
-		console.log('Error on boat post');
-		res.status(400).send({errors: errors});
-	}
-	battleship.setBoat(boat);
+	// Make an error array to store all error messages for the user
+	var errors = [];
 
-	var flag = false;
-	for (boat in battleship.boats) {
-		if (!boat.isSet) {
-			flag = true;
+	// Get the initial coordinates and direction of all the boats and check if position is valid
+	for (sentBoat in sentBoats) {
+		boats[sentBoat.name].coordinates = sentBoat.coordinates; // Initial coordinates
+		boats[sentBoat.name].direction = sentBoat.direction; // Direction of the boat 'right' or 'down'
+
+		// If the boat has not been set by the user (normally impossible), add error
+		if (!sentBoat.isSet) {
+			errors.push(sentBoat.name + ' has not been set !');
+		}
+
+		// Get all the errors on boat position if there are any 
+		var error = battleship.positionIsNotValid(boat);
+		// If there is an error, add it to the errors list
+		if (error) {
+			errors.push(error);
+		}
+		// If there are no errors, set the boat on the grid
+		else {
+			battleship.setBoat(boat);
 		}
 	}
 
-	if (flag) {
-		res.send({boatsSet: false});
+	// If errors have been found send an error status to the user (status 400)
+	if (errors.length != 0) {
+		console.log(errors);
+		console.log('Error on boats post !');
+		res.status(400).send({errors: errors});
 	}
 
-	res.send({
-		redirect:'/game',
-		boatsSet:true
-	});
+	// If there are no errors send a new link to the user to start the game !
+	else {
+		res.send({
+			redirect:'/game',
+			boatsSet:true
+		});
+	}
 });
 
 

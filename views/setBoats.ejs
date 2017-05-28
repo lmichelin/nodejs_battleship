@@ -15,7 +15,10 @@
 <div id="boats">
     
     <!-- Title -->
-    <h1 class="text-center title">The Battleship Game</h1>
+    <div class="row">
+    <h1 class="col-sm-offset-3 text-center col-sm-4 title">The Battleship Game</h1>
+    </div>
+    <div class="row">
     <div class="col-sm-2 col-sm-offset-1 text-center no-padding">
         <h3>Drag&drop your boats :</h3>
         
@@ -36,7 +39,7 @@
         
     </div>
 
-    <div class="col-sm-6 text-center no-padding">
+    <div class="col-sm-4 text-center no-padding">
         <div id='grid' class="divTable center setBoatsTable">
             <div class="divTableBody">
                 <div class="divTableHeading divTableCell"></div>
@@ -49,13 +52,19 @@
         </div>
 
         <!-- Validate setBoats -->
-        <button type="button" class="btn btn-info title">Submit</button>
+        <button v-on:click='submitBoats' type="button" class="btn btn-info title">Submit</button>
 
+    </div>
+
+    <div class="col-sm-3">
+        <div v-for='error in errors' class="alert alert-danger" role="alert">
+            {{error}}
+        </div>
     </div>
 
 
 </div>
-
+</div>
 
     <!-- JS -->
   <script src="/node_modules/vue/dist/vue.js"></script>

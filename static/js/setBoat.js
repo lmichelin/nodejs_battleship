@@ -58,15 +58,18 @@ var boats = new Vue({
                     if (errors) {
                         // Revert boat (move the boat back to its original position)
                         ui.draggable.draggable('option','revert',true); 
-                        console.log(errors);
+                        // Send specific errors to the user
+                        boats.errors = errors;
                     }
                     else {
                         // Set the boat on the droppable element 
                         ui.draggable.draggable('option','revert','invalid');
 
+                        //Reset error messages
+                        boats.errors = [];
+
                         // Set the boat on the grid
                         boats.setBoatOnGrid(boat_name);
-                        console.log(boats.battleship.grid);
                     }
                 }
             });
@@ -111,14 +114,17 @@ var boats = new Vue({
 
             // Get our initial coordinates of the boat on the grid
             var coordinates = this.findCase(left, top);
-            if (coordinates[0] == this.battleship.grid.length || coordinates[1] == this.battleship.grid.length) {
-                errors.push(boat_name + ' is not in grid');
-                console.log('Error because of match problem between pixels of the window and the array coordinates');
-                return errors;
-            }
 
+            // // Check if there was a match between the pixel coordinates on window and grid coordinates
+            // if (coordinates[0] == this.battleship.grid.length || coordinates[1] == this.battleship.grid.length) {
+            //     errors.push(boat_name + ' is not in grid');
+            //     console.log('Error because of match problem between pixels of the window and the array coordinates');
+            //     return errors;
+            // }
+
+            // Get the boat object in question
             var boat = this.battleship.boats[boat_name];
-            //console.log('Boat coordinatesList: ' + this.battleship.boats[boat_name].coordinatesList);
+            //console.log('Boat coordinatesList: ' + this.battleship.boats[boat_name].coordinatesList); //FOR DEBUG
 
             // Set these coordinates in boat object
             this.setBoatPosition(boat_name, coordinates, direction);
@@ -127,12 +133,11 @@ var boats = new Vue({
             this.setBoatCoordinatesList(boat_name);
 
             
-            // console.log('Boat position: ' + boat.coordinates + ' ' + boat.direction); // FOR DEBUGS
+            // console.log('Boat position: ' + boat.coordinates + ' ' + boat.direction); // FOR DEBUG
             // console.log('Boat coordinatesList: ' + boat.coordinatesList); // FOR DEBUG
             for (var i = 0; i < boat.coordinatesList.length; i++) {
                 if (!this.isInGrid(boat.coordinatesList[i])) {
-                    errors.push(boat.name + ' is not in grid');
-                    console.log('unbelievable error');
+                    errors.push(boat.name + ' is not perfectly in grid');
                     break;
                 }
                 if (!this.isZoneAvailable(boat.coordinatesList[i])) {
@@ -229,5 +234,33 @@ var boats = new Vue({
             }
             boat.isSet = true;
         },
+
+        areBoatsSet: function() {
+            for (var boat in this.battleship.boats) {
+                if (!this.battleship.boats[boat].isSet) {
+                    return false;
+                }
+            }
+            return true;
+        },
+
+        submitBoats: function(event) {
+            // Check if all boats have been set before submitting 
+            //console.log(!this.areBoatsSet()) 
+            if (!this.areBoatsSet()) {
+                this.errors.push("Please set all the boats on the grid before submitting !");
+            }
+
+            // All boats habe been checked ! Submit to server
+            else {
+                this.$http.post('/setBoats/sendBoats', {boats: this.battleship.boats}).then(function(response) {
+                    window.location.href = response.data.redirect;
+                }), function(response) {
+                    //If there is an error put it in the console
+                    console.log(response);
+                };
+            }
+
+        }
     },
 });

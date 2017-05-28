@@ -410,10 +410,10 @@ function battleship() {
 		var errors = [];
 		for (var i = 0; i < boat.coordinatesList.length; i++) {
 			if (!isInGrid(boat.coordinatesList[i])) {
-				errors.push(boat.name + 'is not in grid')
+				errors.push(boat.name + ' is not perfectly in grid')
 			}
 			if (!isZoneAvailable(boat.coordinatesList[i], this.grid)) {
-				errors.push('Zone error,' + boat.name + 'will be too close to another ship')
+				errors.push('Zone error, ' + boat.name + ' will be too close to another ship')
 			}
 		}
 		if (errors.length == 0) {
@@ -427,24 +427,17 @@ function battleship() {
 	 * @param {String} boat Boat name
 	 * @this {battleship}
 	 */
-	this.setBoat = function (boat) {
-		if (this.positionIsNotValid(boat)) {
+	this.setBoat = function (boat_name) {
+		// This function should not be called if no tests have been made before !
+		if (this.positionIsNotValid(boat_name)) {
 			throw new Error({message: 'Position is not valid'});
 		}
-		switch (boat.direction) {
-			case 'down':
-				for (var i = 0; i < boat.size; i++) {
-					this.grid[boat.coordinates[0] + i][boat.coordinates[1]];
-				}
 
-				break;
-			case 'right':
-			for (var i = 0; i < boat.size; i++) {
-				this.grid[boat.coordinates[0]][boat.coordinates[1] + i];
-			}
-				break;
-		}
-		boat.isSet = true;
+        var boat = this.boats[boat_name];
+        for (var i = 0; i < boat.size; i++) {
+            this.grid[boat.coordinatesList[i][0]][boat.coordinatesList[i][1]] = 1;
+        }
+        boat.isSet = true;
 	};
 };
 
