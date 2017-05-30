@@ -24,7 +24,7 @@
         
         <div v-for='boat in battleship.boats' :key='boat.name'>
             <h3>{{boat.name}}</h3>
-            <div :id='boat.name' v-on:keyup.space="rotate" class="divTable draggable boatsTable">
+            <div :id='boat.name' v-on:dblclick="rotate(boat.name)" class="divTable draggable boatsTable">
                 <div class="divTableBody">
                     <div class="divTableRow">
                         <div v-for='cell in boat.size' class="divTableCell">&nbsp;</div>

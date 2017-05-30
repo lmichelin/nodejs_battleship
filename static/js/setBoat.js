@@ -31,8 +31,36 @@ var boats = new Vue({
 
     methods: {
         // Rotate the boat on click
-        rotate: function(event) {
-            event.target.classList.toggle('rotate');
+        rotate: function(boat_name) {
+            // Check if boat is already set, if not the boat will reset to its original position
+            if (this.battleship.boats[boat_name].isSet) {
+                this.reset(boat_name);
+                this.errors.push('You cannot rotate if the boat is already set !!');
+            }
+            else {
+
+                $('#' + boat_name).toggleClass('rotated');
+
+                var direction = this.battleship.boats[boat_name].direction;
+
+                // Update direction according to the rotation
+                if (direction == 'down') {
+                    this.battleship.boats[boat_name].direction = 'right';
+                }
+                else {
+                    this.battleship.boats[boat_name].direction = 'down';
+                }
+            }
+        },
+
+        // Reset the boat on its original position on click
+        reset: function(boat_name) {
+            var boat = $('#' + boat_name);
+            boat.animate({
+                "left": 0,
+                "top": 0, 
+            });
+            this.setBoatOffGrid(boat_name);
         },
 
         //Make the boats draggable
@@ -45,29 +73,45 @@ var boats = new Vue({
             });
         },
 
-        //Make grid droppable
+        //Make grid in body droppable
         makeDroppable: function() {
-            $('#grid').droppable({
+            $('body').droppable({
 
                 // What to do after drop (on drop)
                 drop: function(event, ui) {
 
                     // Get the draggable element (boat) position on the window (in pixels)
                     var pos_left = ui.offset.left;
+                    console.log(pos_left);
                     var pos_top = ui.offset.top;
+                    console.log(pos_top);
 
                     // Get the name of the boat that is being dragged
                     var boat_name = ui.draggable.attr('id');
 
-                    // Set a direction (right for now)
-                    var direction = 'right';
+                    // Set the direction of the boat 
+                    var direction = boats.battleship.boats[boat_name].direction;
+                    console.log(direction);
+
+                    // Check if boat was already set
+                    if (boats.battleship.boats[boat_name].isSet) {
+                        // Reset the boat coordinates on grid
+                        boats.setBoatOffGrid(boat_name);
+                    }
 
                     // Execute function to see if there are errors in boat position
                     var errors = boats.isBoatPositionNotValid(boat_name, pos_left, pos_top, direction);
 
+
                     if (errors) {
                         // Revert boat (move the boat back to its original position)
-                        ui.draggable.draggable('option','revert',true); 
+                        ui.draggable.draggable('option','revert', function(event, ui) {
+                                                                    $(this).data("uiDraggable").originalPosition = {
+                                                                        top: 0,
+                                                                        left: 0,
+                                                                    };
+                                                                    return true;
+                                                                }); 
                         // Send specific errors to the user
                         boats.errors = errors;
                     }
@@ -136,8 +180,8 @@ var boats = new Vue({
             this.setBoatCoordinatesList(boat_name);
 
             
-            // console.log('Boat position: ' + boat.coordinates + ' ' + boat.direction); // FOR DEBUG
-            // console.log('Boat coordinatesList: ' + boat.coordinatesList); // FOR DEBUG
+             console.log('Boat position: ' + boat.coordinates + ' ' + boat.direction); // FOR DEBUG
+             console.log('Boat coordinatesList: ' + boat.coordinatesList); // FOR DEBUG
             // Check if the boat is not in the grid and follows game rules
             for (var i = 0; i < boat.coordinatesList.length; i++) {
                 // Check if the boat is not in the grid
@@ -236,6 +280,14 @@ var boats = new Vue({
                 this.battleship.grid[boat.coordinatesList[i][0]][boat.coordinatesList[i][1]] = 1;
             }
             boat.isSet = true;
+        },
+
+        setBoatOffGrid: function(boat_name) {
+            var boat = this.battleship.boats[boat_name];
+            for (var i = 0; i < boat.size; i++) {
+                this.battleship.grid[boat.coordinatesList[i][0]][boat.coordinatesList[i][1]] = 0;
+            }
+            boat.isSet = false;
         },
 
         areBoatsSet: function() {

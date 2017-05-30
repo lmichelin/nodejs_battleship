@@ -228,10 +228,10 @@ function boat (name, size) {
 	/**
 	 * Placement direction on the grid ('right', 'down')
 	 * @type {String}
-	 * @default down
+	 * @default 'right'
 	 * @this {boat}
 	 */
-	this.direction = 'down';
+	this.direction = 'right';
 
 	/**
 	 * Coordinates of the first case
