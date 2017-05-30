@@ -7,16 +7,21 @@ var boats = new Vue({
     el: "#boats",
 
     data: {
+        // Player battleship object (see battleship.js for more information)
         battleship: {grid: []},
+        // String Array containing all the errors that have to be sent to the user 
         errors: [],
     },
 
     // These functions are called only when the vue instance is created
-    mounted: function() {
+    created: function() {
         // Get battleship data with grid and boats
         this.$http.get('/setBoats/getBoats').then(function(response) {
+            console.log(response);
             this.battleship = response.body.battleship;
-        });
+        }), function(response) {
+            console.log(response);
+        };
 
         // Initialize drag and drop 500 ms after page load (IMPORTANT for Firefox compatibility)
         $(document).ready(function() {
@@ -25,6 +30,11 @@ var boats = new Vue({
     },
 
     methods: {
+        // Rotate the boat on click
+        rotate: function(event) {
+            event.target.classList.toggle('rotate');
+        },
+
         //Make the boats draggable
         makeDraggable: function() {
             $('.draggable').draggable({
@@ -37,7 +47,7 @@ var boats = new Vue({
 
         //Make grid droppable
         makeDroppable: function() {
-            $('#grid').droppable({ // ce bloc servira de zone de dépôt
+            $('#grid').droppable({
 
                 // What to do after drop (on drop)
                 drop: function(event, ui) {
@@ -92,7 +102,7 @@ var boats = new Vue({
             var k = Math.min(i, 10); // If there are no matches within the rows, set i back to 10 so that the rows don't return UNDEFINED
             for (var j = 1; j <= this.battleship.grid.length; j++) { // IMPORTANT We need 11 values here ! If we reach the last value, it would mean that no cells matched coordinates
                 var pos_left = $("#grid > .divTableBody > .divTableRow[value='" + k + "'] > .divTableCell[value='" + j + "']").offset().left;
-                //console.log(left, pos_left, top, pos_top);
+                //console.log(left, pos_left, top, pos_top); // FOR DEBUG ONLY
                 if (pos_left == left) {
                     break;
                 }
@@ -115,13 +125,6 @@ var boats = new Vue({
             // Get our initial coordinates of the boat on the grid
             var coordinates = this.findCase(left, top);
 
-            // // Check if there was a match between the pixel coordinates on window and grid coordinates
-            // if (coordinates[0] == this.battleship.grid.length || coordinates[1] == this.battleship.grid.length) {
-            //     errors.push(boat_name + ' is not in grid');
-            //     console.log('Error because of match problem between pixels of the window and the array coordinates');
-            //     return errors;
-            // }
-
             // Get the boat object in question
             var boat = this.battleship.boats[boat_name];
             //console.log('Boat coordinatesList: ' + this.battleship.boats[boat_name].coordinatesList); //FOR DEBUG
@@ -135,11 +138,14 @@ var boats = new Vue({
             
             // console.log('Boat position: ' + boat.coordinates + ' ' + boat.direction); // FOR DEBUG
             // console.log('Boat coordinatesList: ' + boat.coordinatesList); // FOR DEBUG
+            // Check if the boat is not in the grid and follows game rules
             for (var i = 0; i < boat.coordinatesList.length; i++) {
+                // Check if the boat is not in the grid
                 if (!this.isInGrid(boat.coordinatesList[i])) {
                     errors.push(boat.name + ' is not perfectly in grid');
                     break;
                 }
+                // Check if the boat is following game rules (not boats must touch each other)
                 if (!this.isZoneAvailable(boat.coordinatesList[i])) {
                     errors.push('Zone error, ' + boat.name + ' will be too close to another ship');
                     break;
@@ -205,16 +211,13 @@ var boats = new Vue({
          * @return {Boolean}             false or true
          */
         isZoneAvailable: function(coordinates) {
-            console.log(coordinates);
             var x = coordinates[0];
             var y = coordinates[1];
 
             for (var i = x-1; i <= x+1; i++) {
                 for (var j = y-1; j <= y+1; j++) {
                     if (i>=0 && i<=9 && j>=0 && j<=9) {
-                        console.log(this.battleship);
                         if (this.battleship.grid[i][j] != 0) {
-                            console.log('it returned false !!');
                             return false;
                         }
                     }
@@ -246,7 +249,6 @@ var boats = new Vue({
 
         submitBoats: function(event) {
             // Check if all boats have been set before submitting 
-            //console.log(!this.areBoatsSet()) 
             if (!this.areBoatsSet()) {
                 this.errors.push("Please set all the boats on the grid before submitting !");
             }

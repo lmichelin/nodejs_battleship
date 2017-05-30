@@ -24,7 +24,7 @@
         
         <div v-for='boat in battleship.boats' :key='boat.name'>
             <h3>{{boat.name}}</h3>
-            <div :id='boat.name' class="divTable draggable boatsTable">
+            <div :id='boat.name' v-on:keyup.space="rotate" class="divTable draggable boatsTable">
                 <div class="divTableBody">
                     <div class="divTableRow">
                         <div v-for='cell in boat.size' class="divTableCell">&nbsp;</div>
@@ -69,7 +69,6 @@
     <!-- JS -->
   <script src="/node_modules/vue/dist/vue.js"></script>
   <script src="/node_modules/vue-resource/dist/vue-resource.js"></script>  
-  <script src="/socket.io/socket.io.js"></script>
   <script src="/js/setBoat.js"></script>
 
 </body>

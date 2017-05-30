@@ -394,6 +394,14 @@ function battleship() {
 	};
 
 	/**
+	 * Are boats set or not on the grid
+	 * @type {Boolean}
+	 * @this {battleshîp}
+	 * @default false
+	 */
+	this.areBoatsSet = false;
+
+	/**
 	 * Checks wether it is the player's turn
 	 * @type {Boolean}
 	 * @default false
