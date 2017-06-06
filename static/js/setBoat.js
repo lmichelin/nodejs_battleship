@@ -82,16 +82,16 @@ var boats = new Vue({
 
                     // Get the draggable element (boat) position on the window (in pixels)
                     var pos_left = ui.offset.left;
-                    console.log(pos_left);
+                    // console.log(pos_left); // FOR DEBUG
                     var pos_top = ui.offset.top;
-                    console.log(pos_top);
+                    // console.log(pos_top); // FOR DEBUG
 
                     // Get the name of the boat that is being dragged
                     var boat_name = ui.draggable.attr('id');
 
                     // Set the direction of the boat
                     var direction = boats.battleship.boats[boat_name].direction;
-                    console.log(direction);
+                    // console.log(direction); // FOR DEBUG
 
                     // Check if boat was already set
                     if (boats.battleship.boats[boat_name].isSet) {
@@ -151,8 +151,10 @@ var boats = new Vue({
                     break;
                 }
             }
-            console.log(String.fromCharCode(64 + j), i);
+
+            //console.log(String.fromCharCode(64 + j), i); // For DEBUG
             return [i-1, j-1]; // If j-1
+
         },
 
         /**
@@ -180,8 +182,8 @@ var boats = new Vue({
             this.setBoatCoordinatesList(boat_name);
 
 
-             console.log('Boat position: ' + boat.coordinates + ' ' + boat.direction); // FOR DEBUG
-             console.log('Boat coordinatesList: ' + boat.coordinatesList); // FOR DEBUG
+             // console.log('Boat position: ' + boat.coordinates + ' ' + boat.direction); // FOR DEBUG
+             // console.log('Boat coordinatesList: ' + boat.coordinatesList); // FOR DEBUG
             // Check if the boat is not in the grid and follows game rules
             for (var i = 0; i < boat.coordinatesList.length; i++) {
                 // Check if the boat is not in the grid

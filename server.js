@@ -12,7 +12,7 @@ var session = require("express-session")({
   resave: true,
   saveUninitialized: true
 }); // Session that follows client IMPORTANT do not set secure to true
-var gameServer = require('./gamejs/battleship.js').gameServer;
+var gameServer = require('./gamejs/gameServer.js');
 
 
 
@@ -27,7 +27,7 @@ app.use(session); // Use express-session middleware for express
 var port = 8000; // Define Port 8080 by default 
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({extended: true}));
 
 app.use(express.static('static'));
 app.use('/node_modules', express.static(__dirname + '/node_modules')); // animate css
@@ -69,8 +69,6 @@ var createGame = require('./routes/createGame');
 app.use('/createGame', createGame);
 var game = require('./routes/game');
 app.use('/game', game);
-var test = require('./routes/test');
-app.use('/test', test);
 var setBoats = require('./routes/setBoats');
 app.use('/setBoats', setBoats);
 
