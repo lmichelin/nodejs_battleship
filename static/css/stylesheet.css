@@ -16,8 +16,8 @@
 	min-height: 45px;
 }
 .divTableHeading {
-	border:none; 
-	text-align:center; 
+	border:none;
+	text-align:center;
 	vertical-align:middle;
 }
 .divTableFoot {
@@ -40,7 +40,7 @@
 }
 
 .setBoatsTable {
-	margin-top: 10%;
+	margin-top: 5%;
 }
 
 .boatsTable > .divTableBody > .divTableRow > .divTableCell {

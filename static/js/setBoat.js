@@ -9,7 +9,7 @@ var boats = new Vue({
     data: {
         // Player battleship object (see battleship.js for more information)
         battleship: {grid: []},
-        // String Array containing all the errors that have to be sent to the user 
+        // String Array containing all the errors that have to be sent to the user
         errors: [],
     },
 
@@ -58,7 +58,7 @@ var boats = new Vue({
             var boat = $('#' + boat_name);
             boat.animate({
                 "left": 0,
-                "top": 0, 
+                "top": 0,
             });
             this.setBoatOffGrid(boat_name);
         },
@@ -89,7 +89,7 @@ var boats = new Vue({
                     // Get the name of the boat that is being dragged
                     var boat_name = ui.draggable.attr('id');
 
-                    // Set the direction of the boat 
+                    // Set the direction of the boat
                     var direction = boats.battleship.boats[boat_name].direction;
                     console.log(direction);
 
@@ -111,12 +111,12 @@ var boats = new Vue({
                                                                         left: 0,
                                                                     };
                                                                     return true;
-                                                                }); 
+                                                                });
                         // Send specific errors to the user
                         boats.errors = errors;
                     }
                     else {
-                        // Set the boat on the droppable element 
+                        // Set the boat on the droppable element
                         ui.draggable.draggable('option','revert','invalid');
 
                         //Reset error messages
@@ -152,7 +152,7 @@ var boats = new Vue({
                 }
             }
             console.log(String.fromCharCode(64 + j), i);
-            return [i-1, j-1]; // If j-1 
+            return [i-1, j-1]; // If j-1
         },
 
         /**
@@ -179,7 +179,7 @@ var boats = new Vue({
             //Set all boat coordinates in the boat object
             this.setBoatCoordinatesList(boat_name);
 
-            
+
              console.log('Boat position: ' + boat.coordinates + ' ' + boat.direction); // FOR DEBUG
              console.log('Boat coordinatesList: ' + boat.coordinatesList); // FOR DEBUG
             // Check if the boat is not in the grid and follows game rules
@@ -300,13 +300,14 @@ var boats = new Vue({
         },
 
         submitBoats: function(event) {
-            // Check if all boats have been set before submitting 
+            // Check if all boats have been set before submitting
             if (!this.areBoatsSet()) {
                 this.errors.push("Please set all the boats on the grid before submitting !");
             }
 
             // All boats habe been checked ! Submit to server
             else {
+              console.log(this.battleship);
                 this.$http.post('/setBoats/sendBoats', {boats: this.battleship.boats}).then(function(response) {
                     window.location.href = response.data.redirect;
                 }), function(response) {

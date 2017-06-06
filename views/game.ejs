@@ -9,9 +9,11 @@
         <title>The Battleship Game</title>
     </head>
     <body>
-        
+
         <div id="game">
-            
+
+            <div class="container">
+
             <!-- Title -->
             <div class="row">
                 <h1 class="text-center title">The Battleship Game</h1>
@@ -20,7 +22,7 @@
             <!-- grid -->
             <div class="row">
                 <!-- attack grid -->
-                <div class="col-sm-4 col-sm-offset-1 text-center no-padding">
+                <div class="col-sm-5 text-center no-padding">
                     <h2 class="title">Attack Grid</h2>
                     <div class="divTable center">
                         <div class="divTableBody">
@@ -34,15 +36,15 @@
                                 <!-- row label -->
                                 <div class="divTableHeading divTableCell">{{row}}</div>
                                 <!-- cell space (boat cell) -->
-                                <div v-for='cell in battleship.attack_grid.length' v-bind:class='attackCellClass(row, cell)'  :value='cell' v-on:click='attack' class="divTableCell btn"></div>
+                                <div v-for='col in battleship.attack_grid.length' v-bind:class='attackCellClass(row, col)'  :value='col' v-on:click='attack(row, col)' class="divTableCell btn"></div>
                             </div>
 
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Player grid -->
-                <div class="col-sm-4 text-center no-padding">
+                <div class="col-sm-5 text-center no-padding">
                     <h2 class="title">Our ships</h2>
                     <div class="divTable center">
                         <div class="divTableBody">
@@ -56,26 +58,27 @@
                                 <!-- row label -->
                                 <div class="divTableHeading divTableCell">{{row}}</div>
                                 <!-- cell space (boat cell) -->
-                                <div v-for='cell in battleship.grid.length' v-bind:class='myCellClass(row, cell)' :value='cell' class="divTableCell btn"></div>
+                                <div v-for='col in battleship.grid.length' v-bind:class='myCellClass(row, col)' :value='col' class="divTableCell btn"></div>
                             </div>
 
                         </div>
                     </div>
                 </div>
 
-                <div class="col-sm-3">
+                <div class="col-sm-2">
                     <div v-for='error in errors' class="alert alert-danger" role="alert">
                         {{error}}
                     </div>
                 </div>
-                
-                
+
+
             </div>
+          </div>
         </div>
-        
+
         <!-- JS -->
         <script src="/node_modules/vue/dist/vue.js"></script>
-        <script src="/node_modules/vue-resource/dist/vue-resource.js"></script>  
+        <script src="/node_modules/vue-resource/dist/vue-resource.js"></script>
         <script src="/socket.io/socket.io.js"></script>
         <script src="/js/game.js"></script>
     </body>

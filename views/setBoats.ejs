@@ -13,15 +13,17 @@
 <body>
 
 <div id="boats">
-    
+
     <!-- Title -->
+    <div class="container">
     <div class="row">
-    <h1 class="col-sm-offset-3 text-center col-sm-4 title">The Battleship Game</h1>
+    <h1 class="col-sm-offset-3 text-center col-sm-6 title">The Battleship Game</h1>
     </div>
+
     <div class="row">
-    <div class="col-sm-2 col-sm-offset-1 text-center no-padding">
+    <div class="col-sm-3 text-center">
         <h3>Drag&drop your boats :</h3>
-        
+
         <div v-for='boat in battleship.boats' :key='boat.name'>
             <h3>{{boat.name}}</h3>
             <div :id='boat.name' v-on:dblclick="rotate(boat.name)" class="divTable draggable boatsTable">
@@ -31,15 +33,11 @@
                     </div>
                 </div>
             </div>
-            <br />
         </div>
-        
-        <!-- Rotate your boat button -->
-        <button type="button" class="btn btn-info">Rotate</button>
-        
+
     </div>
 
-    <div class="col-sm-4 text-center no-padding">
+    <div class="col-sm-6 text-center">
         <div id='grid' class="divTable center setBoatsTable">
             <div class="divTableBody">
                 <div class="divTableHeading divTableCell"></div>
@@ -62,13 +60,14 @@
         </div>
     </div>
 
+  </div>
 
 </div>
 </div>
 
     <!-- JS -->
   <script src="/node_modules/vue/dist/vue.js"></script>
-  <script src="/node_modules/vue-resource/dist/vue-resource.js"></script>  
+  <script src="/node_modules/vue-resource/dist/vue-resource.js"></script>
   <script src="/js/setBoat.js"></script>
 
 </body>

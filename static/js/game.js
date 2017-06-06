@@ -24,17 +24,18 @@ var game = new Vue({
 		}.bind(this));
 
 		// Get battleship data with grid and boats
-        this.$http.get('/game/getBattleship').then(function(response) {
-            this.battleship = response.body.battleship;
-        });
+    this.$http.get('/game/getBattleship').then(function(response) {
+        this.battleship = response.body.battleship;
+				console.log(this.battleship.grid);
+    });
 	},
 
 	// Methods we want to use in our application are registered here
 	methods: {
 		// Attack enemy cell on click
-		attack: function(event) {
-			var row = event.target.parentgetAttribute('value')
-			console.log(event.target.getAttribute('value'));
+		attack: function(row, col, event) {
+			socket.emit('attack', {row: row, col: col});
+
 		},
 
 		attackCellClass: function(row, col) {
@@ -50,7 +51,7 @@ var game = new Vue({
 						result = {'btn-default': true};
 						break;
 					case 2:
-						reult = {'btn-success': true};
+						result = {'btn-success': true};
 						break;
 					case 3:
 						result = {'btn-warning': true};
