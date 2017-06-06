@@ -1,3 +1,5 @@
+var boat = require('./boat.js'); // Require boat object
+
 /** @type {Object} Battleship class
 * @class battleship class with one per player with all the grids and methods
 * Contains all the different methods and variables for the battleship game
@@ -119,7 +121,7 @@ function battleship() {
 	/**
 	 * Checks if boat position is valid before setting the boat
 	 * @param {String} boat_name name of the boat
-	 * @return {errors} null if no errors, errors if errors
+	 * @return {errors} false if no errors, errors if errors
 	 */
 	this.positionIsNotValid = function(boat_name) {
 		var boat = this.boats[boat_name];
@@ -133,7 +135,7 @@ function battleship() {
 			}
 		}
 		if (errors.length == 0) {
-			return null;
+			return false;
 		}
 		return errors;
 	};
@@ -165,13 +167,13 @@ function battleship() {
  * @return {Boolean}
  */
 function isInGrid(coordinates) {
-	if (Math.min(9, Math.max(coordinates[0],0)) != coordinates[0] ) {
-		return false;
-	}
-	if (Math.min(9, Math.max(coordinates[1],0)) != coordinates[1] ) {
-		return false;
-	}
-	return true;
+    if (Math.min(9, Math.max(coordinates[0],0)) != coordinates[0] ) {
+        return false;
+    }
+    if (Math.min(9, Math.max(coordinates[1],0)) != coordinates[1] ) {
+        return false;
+    }
+    return true;
 };
 
 /**

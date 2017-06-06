@@ -83,18 +83,19 @@ function boat (name, size) {
 	 * @this {boat}
 	 */
 	this.setCoordinatesList = function() {
-		switch (this.direction) {
-			case 'down':
-				for (var i = 0; i < this.size; i++) {
-					this.coordinatesList[i] = this.coordinates + [i,0];
-				}
-				break;
-			case 'right':
-				for (var i = 0; i < this.size; i++) {
-					this.coordinatesList[i] = this.coordinates + [0,i];
-				}
-				break;
-		}
+        this.coordinatesList[0] = this.coordinates;
+        switch (this.direction) {
+            case 'down':
+                for (var i = 0; i < this.size; i++) {
+                    this.coordinatesList[i] = [this.coordinates[0] + i, this.coordinates[1]];
+                }
+                break;
+            case 'right':
+                for (var i = 0; i < this.size; i++) {
+                    this.coordinatesList[i] = [this.coordinates[0], this.coordinates[1] + i];
+                }
+                break;
+        }
 	};
 
 };

@@ -27,7 +27,7 @@ app.use(session); // Use express-session middleware for express
 var port = 8000; // Define Port 8080 by default 
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({extended: true}));
 
 app.use(express.static('static'));
 app.use('/node_modules', express.static(__dirname + '/node_modules')); // animate css

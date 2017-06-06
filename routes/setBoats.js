@@ -53,8 +53,10 @@ router.get('/getBoats', function(req, res) {
 
 router.post('/sendBoats', function(req, res) {
 	console.log('post request ok');
+	console.log(req.body);
 	// Get all the form elements
 	var sentBoats = req.body.boats;
+	console.log(sentBoats);
 	var username = req.session.username;
 
 	//Get the player battleship and boat objects
@@ -66,23 +68,32 @@ router.post('/sendBoats', function(req, res) {
 
 	// Get the initial coordinates and direction of all the boats and check if position is valid
 	for (sentBoat in sentBoats) {
-		boats[sentBoat.name].coordinates = sentBoat.coordinates; // Initial coordinates
-		boats[sentBoat.name].direction = sentBoat.direction; // Direction of the boat 'right' or 'down'
+		// Parse the integers strings in integers
+		sentBoats[sentBoat].coordinates = sentBoats[sentBoat].coordinates.map(Number);
+
+		boats[sentBoat].setPosition(sentBoats[sentBoat].coordinates, sentBoats[sentBoat].direction);
+
+		console.log(boats[sentBoat].coordinates);
+		console.log(boats[sentBoat].direction);
 
 		// If the boat has not been set by the user (normally impossible), add error
-		if (!sentBoat.isSet) {
-			errors.push(sentBoat.name + ' has not been set !');
+		if (!sentBoats[sentBoat].isSet) {
+			errors.push(sentBoats[sentBoat].name + ' has not been set !');
 		}
 
+		// Set coordinates list of the boat:
+		boats[sentBoat].setCoordinatesList();
+
 		// Get all the errors on boat position if there are any 
-		var error = battleship.positionIsNotValid(boat);
+		var error = battleship.positionIsNotValid(sentBoat);
 		// If there is an error, add it to the errors list
 		if (error) {
 			errors.push(error);
 		}
 		// If there are no errors, set the boat on the grid
 		else {
-			battleship.setBoat(boat);
+			console.log(sentBoat + ' has been set !');
+			battleship.setBoat(sentBoat);
 		}
 	}
 
