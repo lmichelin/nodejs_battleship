@@ -14,6 +14,7 @@ var game = new Vue({
 		// Player battleship object (see battleship.js for more information)
 		battleship : {grid: [], attack_grid: []},
 		errors: [],
+		serverMessage: '',
 	},
 
 	// This function is called only when the vue instance is created
@@ -21,13 +22,23 @@ var game = new Vue({
 		// On our or enemy attack, update the battleship object
 		socket.on('attack', function(response) {
 			this.battleship  = response.battleship;
+			this.serverMessage = response.message;
+		}.bind(this));
+
+		// On wait, send the wait message
+		socket.on('wait', function(response) {
+			this.serverMessage = response.message;
+		}.bind(this));
+
+		// On finish, send the win or lose message
+		socket.on('finish', function(response) {
+			this.serverMessage = response.message;
 		}.bind(this));
 
 		// Get battleship data with grid and boats
-    this.$http.get('/game/getBattleship').then(function(response) {
-        this.battleship = response.body.battleship;
-				console.log(this.battleship.grid);
-    });
+	    this.$http.get('/game/getBattleship').then(function(response) {
+	        this.battleship = response.body.battleship;
+	    });
 	},
 
 	// Methods we want to use in our application are registered here

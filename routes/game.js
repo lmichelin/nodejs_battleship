@@ -85,15 +85,20 @@ io.sockets.on('connection', function(socket) {
 
 			// If the other player has not set the boats yet, send the message to the user
 			if (!enemyPlayer.battleship.areBoatsSet) {
-				response.message = 'Waiting for ' + enemyPlayer.username + " to set his boats"
+				response.message = 'Waiting for ' + enemyPlayer.username + " to set his boats";
 				socket.emit('wait', response);
-
-				// Give this player the priviledge to begin the game since he is the first one to have his boats set
 				gameServer.players[username].isTurn = true;
 			}
 
-			if (gameServer.players[username].isTurn) {
-				socket.on('attack', function(attackCoordinates) {
+			else {
+				response.message = 'It is your turn to play';
+				socket.broadcast.to(enemyPlayer.socketId).emit('wait', response);
+				response.message = "It is " + enemyPlayer.username + "'s turn to play";
+				socket.emit('wait', response);
+			}
+
+			socket.on('attack', function(attackCoordinates) {
+				if (enemyPlayer.battleship.areBoatsSet && gameServer.players[username].isTurn) {
 					// Get attack coordinates
 					coordinates = [attackCoordinates.row, attackCoordinates.col];
 
@@ -121,8 +126,8 @@ io.sockets.on('connection', function(socket) {
 						response = {message: "It is " + enemyPlayer.username + "'s turn to play", battleship: battleship}
 						socket.emit('attack', response);
 					}
-				});
-			}
+				}
+			});
 
 		}
 	}
