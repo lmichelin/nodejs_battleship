@@ -30,12 +30,17 @@
 	width: auto;
 }
 
+#myGrid {
+	pointer-events: none;
+}
+
 .title {
 	margin-top: 2%;
 }
 
 .boatsTable {
 	z-index: 1;
+	transition: transform 0.3s ease-in-out;
 	/*margin-left: 30%;*/
 }
 
@@ -44,7 +49,7 @@
 }
 
 .boatsTable > .divTableBody > .divTableRow > .divTableCell {
-	background-color: blue;
+	background-color: #337ab7;
 }
 .center {
 	margin-left: auto;
@@ -52,6 +57,9 @@
 }
 .no-padding {
 	padding: 0;
+}
+.no-margin {
+	margin: 0;
 }
 
 .rotated {
