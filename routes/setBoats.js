@@ -31,7 +31,6 @@ router.get('/', function(req, res) {
 
 // Get request to give the client the battleship object with all the boats inside
 router.get('/getBoats', function(req, res) {
-	console.log('get was called');
 	// Check if player has a username and is in a vaild game
 	if (req.session.username) {  
 		var username = req.session.username;
@@ -39,7 +38,6 @@ router.get('/getBoats', function(req, res) {
 			if (!gameServer.players[username].game.isAvailable()) {
 				// Retrieve the battleship object of the player
 				var battleship = gameServer.players[username].battleship;
-				console.log('battleship sent');
 				res.send({battleship: battleship});
 			}
 		}
@@ -52,11 +50,8 @@ router.get('/getBoats', function(req, res) {
 
 
 router.post('/sendBoats', function(req, res) {
-	console.log('post request ok');
-	console.log(req.body);
 	// Get all the form elements
 	var sentBoats = req.body.boats;
-	console.log(sentBoats);
 	var username = req.session.username;
 
 	//Get the player battleship and boat objects
@@ -89,7 +84,6 @@ router.post('/sendBoats', function(req, res) {
 		}
 		// If there are no errors, set the boat on the grid
 		else {
-			console.log(sentBoat + ' has been set !');
 			battleship.setBoat(sentBoat);
 		}
 	}

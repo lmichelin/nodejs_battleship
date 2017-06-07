@@ -43,6 +43,8 @@ io.sockets.on('connection', function(socket) {
 	if (game) {
 		var player_one = game.player_one;
 		var player_two = game.player_two;
+		//Save player socket ID
+		gameServer.players[username].saveSocketId(socket.id);
 
 		// If the user is the player who created the game ...
 		if (username == player_one.username) {
@@ -51,6 +53,7 @@ io.sockets.on('connection', function(socket) {
 			status.gameRoom = game.name;
 			socket.emit('status', status);
 		}
+
 		// If the user is the player who joined the game ...
 		else {
 

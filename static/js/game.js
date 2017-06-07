@@ -35,7 +35,7 @@ var game = new Vue({
 		// Attack enemy cell on click
 		attack: function(row, col, event) {
 			console.log('attack done');
-			socket.emit('attack', attackCoordinates = {row: row, col: col});
+			socket.emit('attack', attackCoordinates = {row: row - 1, col: col - 1});
 
 		},
 
@@ -84,7 +84,7 @@ var game = new Vue({
 						result = {'btn-primary': true};
 						break;
 					case 2:
-						reult = {'btn-success': true};
+						result = {'btn-success': true};
 						break;
 					case 3:
 						result = {'btn-warning': true};

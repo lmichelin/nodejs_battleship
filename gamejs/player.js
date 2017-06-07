@@ -28,6 +28,22 @@ function player(username) {
 	this.game = null;
 
 	/**
+	 * Socket ID of the user (necessary for socket communication)
+	 * @type {ObjectID}
+	 * @this {player}
+	 */
+	this.socketId = null;
+
+	/**
+	 * Save socket Id in the player object
+	 * @param  {ObjectID} socketId Socket ID of the connected player
+	 * @this {player}
+	 */
+	this.saveSocketId = function(socketId) {
+		this.socketId = socketId;
+	};
+
+	/**
 	 * Join game function (a user who did not create a game must join)
 	 * @param  {game} game game that has already been created
 	 * @this {player}
