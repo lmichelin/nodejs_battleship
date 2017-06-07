@@ -170,6 +170,26 @@ function battleship() {
         boat.isSet = true;
 	};
 
+
+	/**
+	 * Random position generator for boats
+	 */
+	this.randomSetBoats = function () {
+		for (var boat in this.boats) {
+			while (!this.boats[boat].isSet) {
+				var i = Math.floor(Math.random() * 10) + 1; // rand int [1..10]
+				var j = Math.floor(Math.random() * 10) + 1; // rand int [1..10]
+				var rnd = Math.floor(Math.random() + 0.5); // rand boolean
+				var dir = "down".repeat(rnd) + "right".repeat(1-rnd);
+				this.boats[boat].setPosition([i, j], dir);
+				this.boats[boat].setCoordinatesList();
+				if (!this.positionIsNotValid(boat)) {
+					this.setBoat(boat);
+				}
+			}
+		}
+	}
+
 	/**
 	 * Find the boat that has been hit
 	 * @param  {x} x x axis coordiantes

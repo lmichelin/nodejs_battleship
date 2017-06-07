@@ -317,7 +317,15 @@ var boats = new Vue({
                     console.log(response);
                 };
             }
+        },
 
-        }
+        randomSetAndSubmitBoats: function(event) {
+            this.$http.post('/setBoats/sendBoats', {randomSet: true}).then(function(response) {
+                window.location.href = response.data.redirect;
+            }), function(response) {
+                //If there is an error put it in the console
+                console.log(response);
+            };
+        },
     },
 });
