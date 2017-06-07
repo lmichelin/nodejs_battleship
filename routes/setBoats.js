@@ -8,9 +8,9 @@ var router = express.Router(); //Create router object
 /************************************* Join routes *********************************************************/
 router.get('/', function(req, res) {
 	// If player already has a username then we are good to send him the page
-	if (req.session.username) { 
+	if (req.session.username) {
 		var username = req.session.username;
-		// check if player is in a game 
+		// check if player is in a game
 		if (gameServer.players[username].game) {
 			// Check if another player has joined the game
 			if (!gameServer.players[username].game.isAvailable()) {
@@ -32,7 +32,7 @@ router.get('/', function(req, res) {
 // Get request to give the client the battleship object with all the boats inside
 router.get('/getBoats', function(req, res) {
 	// Check if player has a username and is in a vaild game
-	if (req.session.username) {  
+	if (req.session.username) {
 		var username = req.session.username;
 		if (gameServer.players[username].game) {
 			if (!gameServer.players[username].game.isAvailable()) {
@@ -51,40 +51,50 @@ router.get('/getBoats', function(req, res) {
 
 router.post('/sendBoats', function(req, res) {
 	// Get all the form elements
-	var sentBoats = req.body.boats;
-	var username = req.session.username;
 
-	//Get the player battleship and boat objects
+	var username = req.session.username;
 	var battleship = gameServer.players[username].battleship;
-	var boats = battleship.boats;
 
 	// Make an error array to store all error messages for the user
 	var errors = [];
 
-	// Get the initial coordinates and direction of all the boats and check if position is valid
-	for (sentBoat in sentBoats) {
-		// Parse the integers strings in integers
-		sentBoats[sentBoat].coordinates = sentBoats[sentBoat].coordinates.map(Number);
+	console.log(req.body);
 
-		boats[sentBoat].setPosition(sentBoats[sentBoat].coordinates, sentBoats[sentBoat].direction);
+	if (typeof req.body.randomSet != "undefined") {
+		battleship.randomSetBoats();
+	}
+	else {
 
-		// If the boat has not been set by the user (normally impossible), add error
-		if (!sentBoats[sentBoat].isSet) {
-			errors.push(sentBoats[sentBoat].name + ' has not been set !');
-		}
+		var sentBoats = req.body.boats;
 
-		// Set coordinates list of the boat:
-		boats[sentBoat].setCoordinatesList();
+		//Get the player battleship and boat objects
+		var boats = battleship.boats;
 
-		// Get all the errors on boat position if there are any 
-		var error = battleship.positionIsNotValid(sentBoat);
-		// If there is an error, add it to the errors list
-		if (error) {
-			errors.push(error);
-		}
-		// If there are no errors, set the boat on the grid
-		else {
-			battleship.setBoat(sentBoat);
+		// Get the initial coordinates and direction of all the boats and check if position is valid
+		for (sentBoat in sentBoats) {
+			// Parse the integers strings in integers
+			sentBoats[sentBoat].coordinates = sentBoats[sentBoat].coordinates.map(Number);
+
+			boats[sentBoat].setPosition(sentBoats[sentBoat].coordinates, sentBoats[sentBoat].direction);
+
+			// If the boat has not been set by the user (normally impossible), add error
+			if (!sentBoats[sentBoat].isSet) {
+				errors.push(sentBoats[sentBoat].name + ' has not been set !');
+			}
+
+			// Set coordinates list of the boat:
+			boats[sentBoat].setCoordinatesList();
+
+			// Get all the errors on boat position if there are any
+			var error = battleship.positionIsNotValid(sentBoat);
+			// If there is an error, add it to the errors list
+			if (error) {
+				errors.push(error);
+			}
+			// If there are no errors, set the boat on the grid
+			else {
+				battleship.setBoat(sentBoat);
+			}
 		}
 	}
 
