@@ -1,124 +1,11 @@
-function game(name, player_one, player_two) {
-	this.name = name;
-	this.player_one = player_one;
-	this.player_two = player_two;
-}
-
-
-/**
- * Boat Object
- * @class Boat class
- * @param  {string} name  Name of the boat category
- * @param  {integer} size Number of spaces occupied (size of the boat)
- */
-function boat (name, size) {
-	/**
-	 * Name of the boat
-	 * @type {string}
-	 * @this {boat}
-	 */
-	this.name = name;
-
-	/**
-	 * Size of the boat
-	 * @this {boat}
-	 * @type {Integer}
-	 */
-	this.size = size;
-
-	/**
-	 * Tells wether the boat is sunk or not
-	 * @type {Boolean}
-	 * @default false
-	 * @this {boat}
-	 */
-	this.isSunk = false;
-
-	/**
-	 * Sinks a ship
-	 * @this {boat}
-	 */
-	this.sink = function() {
-		this.isSunk = true;
-	}
-
-	/**
-	 * Placement direction on the grid ('right', 'down')
-	 * @type {String}
-	 * @default down
-	 * @this {boat}
-	 */
-	this.direction = 'down';
-
-	/**
-	 * Coordinates of the first case
-	 * @type {tuple}
-	 * @default (0,0)
-	 * @this {boat}
-	 */
-	this.coordinates = [0,0];
-
-	/**
-	 * Checks wether a boat has been set on the grid or not
-	 * @type {Boolean}
-	 * @this {boat}
-	 * @default false
-	 */
-	this.isSet = false;
-
-	/**
-	 * Set position of the boat
-	 * @param {tuple} initial_coordinates Coordinates of the position of the first case
-	 * @param {string} direction can be 'right', 'down'
-	 * @this {boat}
-	 */
-	this.setPosition = function (initial_coordinates, direction) {
-		this.coordinates = initial_coordinates;
-		this.direction = direction;
-	};
-
-	/**
-	 * List of the grid coordiantes of the boat
-	 * @type {Array}
-	 * @default (0,0, ... 0)
-	 * @this {boat}
-	 */
-	this.coordinatesList = new Array(this.size).fill([0,0]);
-
-	/**
-	 * Set the coordinatesList equal to the position of the boat when a initial positio and direction have been chosen
-	 * @this {boat}
-	 */
-	this.setCoordinatesList = function() {
-		switch (this.direction) {
-			case 'down':
-				for (var i = 0; i < this.size; i++) {
-					this.coordinatesList[i] = this.coordinates + [i,0];
-				}
-				break;
-			case 'right':
-				for (var i = 0; i < this.size; i++) {
-					this.coordinatesList[i] = this.coordinates + [0,i];
-				}
-				break;
-		}
-	};
-
-};
-
+var boat = require('./boat.js'); // Require boat object
 
 /** @type {Object} Battleship class
 * @class battleship class with one per player with all the grids and methods
 * Contains all the different methods and variables for the battleship game
 * @param {string} player Player name
 */
-function battleship(player) {
-
-	/**
-	 * Player name
-	 * @type {string}
-	 */
-	this.player = player;
+function battleship() {
 
 	/** This is the main grid for the game
 	* @this {battleship}
@@ -127,7 +14,7 @@ function battleship(player) {
 	this.grid =  [
 		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-		[0, 0, 1, 1, 1, 1, 1, 0, 0, 0],
+		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -217,6 +104,14 @@ function battleship(player) {
 	};
 
 	/**
+	 * Are boats set or not on the grid
+	 * @type {Boolean}
+	 * @this {battleshîp}
+	 * @default false
+	 */
+	this.areBoatsSet = false;
+
+	/**
 	 * Checks wether it is the player's turn
 	 * @type {Boolean}
 	 * @default false
@@ -224,57 +119,61 @@ function battleship(player) {
 	this.isTurn = false;
 
 	/**
-	 * Sets boat on grid
-	 * @param {object boat} boat Boat object
-	 * @this {battleship}
+	 * Checks if boat position is valid before setting the boat
+	 * @param {String} boat_name name of the boat
+	 * @return {errors} false if no errors, errors if errors
 	 */
-	this.setBoat = function (boat) {
-		if (boat.isSet) {
-			console.error(boat.name + ' is already set on grid');
-		}
-		if (boat.coordinatesList[boat.size-1] == [0,0]) {
-			console.error(boat.name + 'coordinatesList are not set ...')
-		}
+	this.positionIsNotValid = function(boat_name) {
+		var boat = this.boats[boat_name];
+		var errors = [];
 		for (var i = 0; i < boat.coordinatesList.length; i++) {
 			if (!isInGrid(boat.coordinatesList[i])) {
-				console.error(boat.name + 'is not in grid')
+				errors.push(boat.name + ' is not perfectly in grid')
 			}
 			if (!isZoneAvailable(boat.coordinatesList[i], this.grid)) {
-				console.error('Zone error,' + boat.name + 'will be too close to another ship')
+				errors.push('Zone error, ' + boat.name + ' will be too close to another ship')
 			}
 		}
-		switch (boat.direction) {
-			case 'down':
-				for (var i = 0; i < boat.size; i++) {
-					this.grid[boat.coordinates[0] + i][boat.coordinates[1]];
-				}
+		if (errors.length == 0) {
+			return false;
+		}
+		return errors;
+	};
 
-				break;
-			case 'right':
-			for (var i = 0; i < boat.size; i++) {
-				this.grid[boat.coordinates[0]][boat.coordinates[1] + i];
-			}
-				break;
+	/**
+	 * Sets boat on grid
+	 * @param {String} boat Boat name
+	 * @this {battleship}
+	 */
+	this.setBoat = function (boat_name) {
+		// This function should not be called if no tests have been made before !
+		if (this.positionIsNotValid(boat_name)) {
+			throw new Error({message: 'Position is not valid'});
 		}
-		boat.isSet = true;
+
+        var boat = this.boats[boat_name];
+        for (var i = 0; i < boat.size; i++) {
+            this.grid[boat.coordinatesList[i][0]][boat.coordinatesList[i][1]] = 1;
+        }
+        boat.isSet = true;
 	};
 };
 
 
 
 /**
- * Test to check wether the boat can be placed on these coordinates
+ * Test to check wether these coordinates can be placed on the grid
  * @param  {tuple}  coordinates coordinates of the zone
  * @return {Boolean}
  */
 function isInGrid(coordinates) {
-	if (Math.min(9, Math.max(coordinates[0],0)) != coordinates[0] ) {
-		return false;
-	}
-	if (Math.min(9, Math.max(coordinates[1],0)) != coordinates[1] ) {
-		return false;
-	}
-	return true;
+    if (Math.min(9, Math.max(coordinates[0],0)) != coordinates[0] ) {
+        return false;
+    }
+    if (Math.min(9, Math.max(coordinates[1],0)) != coordinates[1] ) {
+        return false;
+    }
+    return true;
 };
 
 /**
@@ -299,4 +198,6 @@ function isZoneAvailable(coordinates, currentGrid) {
 	return true;
 };
 
-module.exports = {battleship, boat};
+
+
+module.exports = battleship;

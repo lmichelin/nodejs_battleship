@@ -10,21 +10,16 @@
 <body>
 
 <h1 class="text-center">The Battleship Game</h1>
-
-<div class="container">
-	<form id="uploadForm" action="/createGame" method="post">
-	  <div class="form-group">
-	    <label for="username">Username</label>
-	    <input type="text" class="form-control" name="username">
-	  </div>
-	  <div class="form-group">
-	    <label for="gameName">Game Name</label>
-	    <input type="text" class="form-control" name="gameName">
-	  </div>
-	  <button type="submit" class="btn btn-default">Submit</button>
-	</form>
+<div id='gameStatus'>
+  <p>{{message}}</p>
+  <button v-on:click='startGame' type="button" class="hidden btn btn-info">Start Game</button>
 </div>
 
+    <!-- JS -->
+  <script src="/node_modules/vue/dist/vue.js"></script>
+  <script src="/node_modules/vue-resource/dist/vue-resource.js"></script>  
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/initialize.js"></script>
 
 </body>
 </html>

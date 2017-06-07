@@ -1,0 +1,68 @@
+/* Table with divs */
+.divTable{
+	display: table;
+	border: none;
+}
+.divTableRow {
+	display: table-row;
+}
+.divTableCell, .divTableHead {
+	border: 1px solid #ccc;
+	display: table-cell;
+	padding: 0px;
+	width: 45px;
+	height: 45px;
+	min-width: 45px;
+	min-height: 45px;
+}
+.divTableHeading {
+	border:none;
+	text-align:center;
+	vertical-align:middle;
+}
+.divTableFoot {
+	background-color: #EEE;
+	display: table-footer-group;
+	font-weight: bold;
+}
+.divTableBody {
+	display: table-row-group;
+	width: auto;
+}
+
+#myGrid {
+	pointer-events: none;
+}
+
+.title {
+	margin-top: 2%;
+}
+
+.boatsTable {
+	z-index: 1;
+	transition: transform 0.3s ease-in-out;
+	/*margin-left: 30%;*/
+}
+
+.setBoatsTable {
+	margin-top: 5%;
+}
+
+.boatsTable > .divTableBody > .divTableRow > .divTableCell {
+	background-color: #337ab7;
+}
+.center {
+	margin-left: auto;
+	margin-right: auto;
+}
+.no-padding {
+	padding: 0;
+}
+.no-margin {
+	margin: 0;
+}
+
+.rotated {
+	transform: rotate(90deg);
+	transition: transform 0.3s ease-in-out;
+}
