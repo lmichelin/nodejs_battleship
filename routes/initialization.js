@@ -9,7 +9,7 @@ var router = express.Router(); //Create router object
 
 router.get('/', function(req, res) {
 	// If player already has a username and a game then we are good to send him the page
-	if (req.session.username) {  
+	if (req.session.username) {
 		// check if player is registered to a  game
 		if (gameServer.players[req.session.username].game) {
 			res.render('initialize');
@@ -28,7 +28,7 @@ module.exports = router;
 
 // This code will execute when the user refreshes the page ...
 io.sockets.on('connection', function(socket) {
-	
+
 	var username = socket.handshake.session.username;
 	var game = gameServer.players[username].game;
 
@@ -50,10 +50,10 @@ io.sockets.on('connection', function(socket) {
 			socket.join(game.name)
 			status.gameRoom = game.name;
 			socket.emit('status', status);
-		} 
+		}
 		// If the user is the player who joined the game ...
 		else {
-			
+
 
 			// Send message to player one !
 			status.message = "Player " + player_two.username + " is connected ! You are ready to start the game !";
@@ -61,7 +61,7 @@ io.sockets.on('connection', function(socket) {
 			socket.to(game.name).emit('status', status);
 
 			// Join specific game room
-			status.message = "You are  connected with" + player_one.username + " !";
+			status.message = "You are  connected with " + player_one.username + " !";
 			socket.emit('status', status);
 			socket.join(game.name);
 
@@ -74,6 +74,3 @@ io.sockets.on('connection', function(socket) {
 		io.sockets.in(game.name).emit('setBoats', response)
 	})
 });
- 
-
-

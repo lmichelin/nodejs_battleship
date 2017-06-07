@@ -34,7 +34,7 @@ var game = new Vue({
 	methods: {
 		// Attack enemy cell on click
 		attack: function(row, col, event) {
-			socket.emit('attack', {row: row, col: col});
+			socket.emit('attack', attackCoordinates = {row: row, col: col});
 
 		},
 
@@ -45,10 +45,10 @@ var game = new Vue({
 				// Return a class according to the cell value
 				switch (this.battleship.attack_grid[row-1][col-1]) { // row - 1 and col - 1 because the for loop in the webpage loops from 1 to 10 ...
 					case 0:
-						result = {'btn-info': true};
+						result = {'btn-default': true};
 						break;
 					case 1:
-						result = {'btn-default': true};
+						result = {'btn-primary': true};
 						break;
 					case 2:
 						result = {'btn-success': true};
@@ -77,10 +77,10 @@ var game = new Vue({
 				// Return a class according to the cell value
 				switch (this.battleship.grid[row-1][col-1]) {
 					case 0:
-						result = {'btn-info': true};
+						result = {'btn-default': true};
 						break;
 					case 1:
-						result = {'btn-default': true};
+						result = {'btn-primary': true};
 						break;
 					case 2:
 						reult = {'btn-success': true};
