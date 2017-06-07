@@ -28,6 +28,13 @@ function player(username) {
 	this.game = null;
 
 	/**
+	 * Is it the turn of the user ?
+	 * @type {Boolean}
+	 * @this {player}
+	 */
+	this.isTurn = false;
+
+	/**
 	 * Socket ID of the user (necessary for socket communication)
 	 * @type {ObjectID}
 	 * @this {player}

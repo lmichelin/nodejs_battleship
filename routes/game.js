@@ -65,6 +65,7 @@ io.sockets.on('connection', function(socket) {
 
 		var battleship = gameServer.players[username].battleship;
 
+		// Both users have to be in the game
 		if (!game.isAvailable()) {
 
 			// Get enemy player
@@ -76,21 +77,51 @@ io.sockets.on('connection', function(socket) {
 				enemyPlayer = game.player_one;
 			}
 
-			socket.on('attack', function(attackCoordinates) {
-				// Get attack coordinates
-				coordinates = [attackCoordinates.row, attackCoordinates.col];
-				console.log(username);
-				console.log(enemyPlayer.username);
+			// Initialize the response message for the users
+			var response = {
+				message:'',
+				battleship:{}
+			};
 
-				battleship.attackEnemy(coordinates, enemyPlayer);
-				console.log(enemyPlayer.battleship.grid);
-				var response = {battleship: enemyPlayer.battleship};
-				socket.broadcast.to(enemyPlayer.socketId).emit('attack', response);
+			// If the other player has not set the boats yet, send the message to the user
+			if (!enemyPlayer.battleship.areBoatsSet) {
+				response.message 'Waiting for ' + enemyPlayer.username + " to set his boats"
+				socket.emit('wait', response);
 
-				console.log(battleship.attack_grid);
+				// Give this player the priviledge to begin the game since he is the first one to have his boats set
+				gameServer.players[username].isTurn = true;
+			}
 
-				response = {battleship: battleship}
-				socket.emit('attack', response);
+			if (gameServer.players[username].isTurn) {
+				socket.on('attack', function(attackCoordinates) {
+					// Get attack coordinates
+					coordinates = [attackCoordinates.row, attackCoordinates.col];
+
+					// Execute attack function
+					battleship.attackEnemy(coordinates, enemyPlayer);
+
+					// Check if the user has won
+					if (enemyPlayer.battleship.isFleetDestroyed()) {
+						var response = {message: 'You have lost ! Better luck next time !'};
+						socket.broadcast.to(enemyPlayer.socketId).emit('finish', response);
+						response = {message: 'You won !'};
+						socket.emit('finish', response);
+					}
+
+					//  If there is no victory ...
+					else {
+						// Change user's turn:
+						gameServer.players[username].isTurn = false;
+						enemyPlayer.isTurn = true;
+
+						// Send the response to both users
+						response = {message: 'It is your turn to play', battleship: enemyPlayer.battleship};
+						socket.broadcast.to(enemyPlayer.socketId).emit('attack', response);
+
+						response = {message: "It is " + enemyPlayer.username + "'s turn to play", battleship: battleship}
+						socket.emit('attack', response);
+					}
+				}
 			});
 
 		}

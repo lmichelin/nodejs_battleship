@@ -79,16 +79,21 @@ function battleship() {
 		var x = coordinates[0];
 		var y = coordinates[1];
 		if (this.areAttackCoordinatesTested(x,y)) {
-			throw new Error('This zone has already been hit !!')
+			console.log('This zone has already been hit !!');
+			return false;
 		}
 		if (enemyPlayer.battleship.checkPosition(x,y)) {
 			enemyPlayer.battleship.grid[x][y] = 3;
 			this.attack_grid[x][y] = 3;
 
 			// Find the boat that has been hit
-			var hitBoat = enemyPlayer.battleship.findHitBoat(x,y);
+			console.log(x, y);
+			var hitBoat = enemyPlayer.battleship.findHitBoat(x, y);
+			console.log(hitBoat.name);
+			console.log(hitBoat.isSunk);
 			// Sink the boat if it was completely destroyed
 			enemyPlayer.battleship.sinkBoatIfDestroyed(hitBoat.name);
+			this.sinkEnemyBoatIfDestroyed(hitBoat.name, enemyPlayer);
 		}
 		else {
 			enemyPlayer.battleship.grid[x][y] = 2;
@@ -114,6 +119,20 @@ function battleship() {
 		'submarine': submarine,
 		'destroyer': destroyer,
 	};
+
+	/**
+	 * Check if all boats are destroyed
+	 * @return {Boolean} true if destroyed, false otherwise
+	 */
+	this.isFleetDestroyed = function() {
+		flag = true;
+		for (boat in this.boats) {
+			if (!this.boats[boat].isSunk) {
+				flag = false;
+			}
+		}
+		return flag;
+	}
 
 	/**
 	 * Are boats set or not on the grid
@@ -179,7 +198,9 @@ function battleship() {
 	this.findHitBoat = function(x, y) {
 		for (boat in this.boats) {
 			for (coordinates of this.boats[boat].coordinatesList) {
-				if (coordinates = [x, y]) {
+				console.log(coordinates);
+				if (coordinates[0] == x && coordinates[1] == y) {
+					console.log('findHitBoat returned true');
 					return this.boats[boat];
 				}
 			}
@@ -194,13 +215,15 @@ function battleship() {
 	this.sinkBoatIfDestroyed = function(boat_name) {
 		var flag = true;
 		for (coordinates of this.boats[boat_name].coordinatesList) {
+			console.log(coordinates);
 			var x = coordinates[0];
 			var y = coordinates[1];
-			if (!this.grid[x][y] != 3) {
+			if (this.grid[x][y] != 3) {
 				flag = false;
 				break;
 			}
 		}
+		console.log(flag);
 		if (flag) {
 			// Sink the boat !!
 			this.boats[boat_name].sink();
@@ -211,6 +234,16 @@ function battleship() {
 			}
 		}
 	};
+
+	this.sinkEnemyBoatIfDestroyed = function(boat_name, enemyPlayer) {
+		if (enemyPlayer.battleship.boats[boat_name].isSunk) {
+			for (coordinates of enemyPlayer.battleship.boats[boat_name].coordinatesList) {
+				var x = coordinates[0];
+				var y = coordinates[1];
+				this.attack_grid[x][y] = 4;
+			}
+		}
+	}
 };
 
 
