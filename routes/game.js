@@ -65,7 +65,8 @@ io.sockets.on('connection', function(socket) {
 
 		var battleship = gameServer.players[username].battleship;
 
-		if (!game.isAvailable) {
+		if (!game.isAvailable()) {
+			console.log('game is not available');
 
 			// Get enemy player
 			var enemyPlayer;
@@ -77,10 +78,13 @@ io.sockets.on('connection', function(socket) {
 			}
 
 			socket.on('attack', function(attackCoordinates) {
+				console.log('there was an attack !');
 				coordinates = [attackCoordinates.row, attackCoordinates.col];
 				battleship.attackEnemy(coordinates, enemyPlayer);
-				socket.broadcast.to(game.name).emit('attack', enemyPlayer.battleship);
-				socket.to(game.name).emit('attack', battleship);
+				var response = {battleship: enemyPlayer.battleship};
+				socket.broadcast.to(game.name).emit('attack', response);
+				response = {battleship: battleship}
+				socket.to(game.name).emit('attack', response);
 			});
 
 		}

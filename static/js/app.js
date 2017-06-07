@@ -20,7 +20,7 @@ var listGames = new Vue({
 	created: function() {
 		socket.on('listGames', function(availableGames) {
 			this.gamesList  = availableGames;
-			console.log(this.gamesList);
+			//console.log(this.gamesList); // FOR DEBUG
 		}.bind(this));
 	},
 
