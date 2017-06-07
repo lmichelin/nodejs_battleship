@@ -32,6 +32,7 @@ io.sockets.on('connection', function(socket) {
 	var username = socket.handshake.session.username;
 	var game = gameServer.players[username].game;
 
+	// Status that will be sent to the user upon states
 	var status = {
 		status: 'waiting',
 		message: '',
@@ -66,9 +67,10 @@ io.sockets.on('connection', function(socket) {
 
 		}
 	}
-
+	// When the user sends a startGame, redirect both users to the setBoats page
 	socket.on('startGame', function() {
 		var response = {redirect: '/setBoats'};
+		// Send the redirect url to everyone inside the created game room
 		io.sockets.in(game.name).emit('setBoats', response)
 	})
 });

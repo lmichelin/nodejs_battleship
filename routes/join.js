@@ -64,7 +64,6 @@ io.sockets.on('connection', function(socket) {
 		var player = gameServer.players[username];
 		var games = gameServer.games;
 
-	    console.log(gameServer.availableGames);
 		socket.emit('listGames', gameServer.availableGames);
 		
 	});
