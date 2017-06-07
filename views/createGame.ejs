@@ -9,10 +9,11 @@
 </head>
 <body>
 
-<h1 class="text-center">The Battleship Game</h1>
 
-<div class="container">
-	<form id="uploadForm" action="/createGame" method="post">
+<div class="container text-center">
+  <h1>The Battleship Game</h1>
+  <br>
+	<div class="col-sm-6 col-sm-offset-3"><form id="uploadForm" action="/createGame" method="post">
 	  <div class="form-group">
 	    <label for="username">Username</label>
 	    <input type="text" class="form-control" name="username">
@@ -21,8 +22,8 @@
 	    <label for="gameName">Game Name</label>
 	    <input type="text" class="form-control" name="gameName">
 	  </div>
-	  <button type="submit" class="btn btn-default">Submit</button>
-	</form>
+	  <button type="submit" class="btn btn-primary">Submit</button>
+	</form></div>
 </div>
 
 
