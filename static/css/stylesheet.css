@@ -1,3 +1,17 @@
+@font-face {
+	font-family: WarWound;
+	src: url("GimmeDanger.ttf");
+}
+
+body {
+	background-image: url("https://images5.alphacoders.com/539/thumb-1920-539466.jpg");
+	color: white;
+}
+
+h1, h2, .divTableHeading {
+	font-family: WarWound;
+}
+
 /* Table with divs */
 .divTable{
 	display: table;
@@ -36,10 +50,14 @@
 
 /*already visited cells*/
 
-.btn-primary, .btn-success, .btn-warning, .btn-danger {
+#attackGrid .btn-primary, #attackGrid .btn-success, #attackGrid .btn-warning, #attackGrid .btn-danger {
 	pointer-events: none;
 }
 
+.bounceIn {
+	animation-name: bounceIn;
+	animation-duration: 0.5s;
+}
 
 .title {
 	margin-top: 2%;
@@ -72,4 +90,25 @@
 .rotated {
 	transform: rotate(90deg);
 	transition: transform 0.3s ease-in-out;
+}
+
+@keyframes bounceIn {
+  from, 20%, 40%, 60%, 80%, to {
+    animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+  }
+  0% {
+    transform: scale3d(1, 1, 1);
+  }
+  25% {
+    transform: scale3d(1.4, 1.4, 1.4);
+  }
+  50% {
+    transform: scale3d(1, 1, 1);
+  }
+  75% {
+    transform: scale3d(1.2, 1.2, 1.2);
+  }
+  to {
+    transform: scale3d(1, 1, 1);
+  }
 }

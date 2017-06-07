@@ -63,13 +63,13 @@ var game = new Vue({
 						result = {'btn-primary': true};
 						break;
 					case 2:
-						result = {'btn-success': true};
+						result = {'btn-success': true, 'bounceIn': true};
 						break;
 					case 3:
-						result = {'btn-warning': true};
+						result = {'btn-warning': true, 'bounceIn': true};
 						break;
 					case 4:
-						result = {'btn-danger': true};
+						result = {'btn-danger': true, 'bounceIn': true};
 						break;
 					default:
 						result = {};
@@ -95,13 +95,13 @@ var game = new Vue({
 						result = {'btn-primary': true};
 						break;
 					case 2:
-						result = {'btn-success': true};
+						result = {'btn-success': true, 'bounceIn': true};
 						break;
 					case 3:
-						result = {'btn-warning': true};
+						result = {'btn-warning': true, 'bounceIn': true};
 						break;
 					case 4:
-						result = {'btn-danger': true};
+						result = {'btn-danger': true, 'bounceIn': true};
 						break;
 					default:
 						result = {};
