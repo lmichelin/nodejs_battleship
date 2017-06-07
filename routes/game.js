@@ -85,7 +85,7 @@ io.sockets.on('connection', function(socket) {
 
 			// If the other player has not set the boats yet, send the message to the user
 			if (!enemyPlayer.battleship.areBoatsSet) {
-				response.message 'Waiting for ' + enemyPlayer.username + " to set his boats"
+				response.message = 'Waiting for ' + enemyPlayer.username + " to set his boats"
 				socket.emit('wait', response);
 
 				// Give this player the priviledge to begin the game since he is the first one to have his boats set
@@ -121,8 +121,8 @@ io.sockets.on('connection', function(socket) {
 						response = {message: "It is " + enemyPlayer.username + "'s turn to play", battleship: battleship}
 						socket.emit('attack', response);
 					}
-				}
-			});
+				});
+			}
 
 		}
 	}
