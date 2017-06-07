@@ -1,6 +1,7 @@
 /************************************* Require dependencies **********************************************/
 
 var express = require('express');
+
 var gameServer = require('../server.js').gameServer;
 var io = require('../server.js').io;
 
@@ -11,6 +12,7 @@ var router = express.Router(); //Create router object
 router.get('/', function(req, res) {
 	res.render('createGame');
 });
+
 
 // Post the information about the user and the game that the user wants to create
 router.post('/', function(req, res) {
@@ -31,5 +33,6 @@ router.post('/', function(req, res) {
 
 	res.redirect('/initialization'); //Redirect to waiting area for another player to join the game !
 });
+
 
 module.exports = router;

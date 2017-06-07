@@ -56,31 +56,43 @@ function battleship() {
 		}
 	};
 
-	/** Attack Enemy function: Will either hit or miss target. Changes the value of the enemy grid: 0 is water, 1 is boat, 2 is test but miss, 3 is test with a hit, 4 is sunk ...
-	* @this {battleship}
-	* @param {object} enemy_battleship battleship object of the opponent
-	* @param {tuple} (x,y) Attack coordinates
-	*/
-	this.attackEnemy = function(x,y, enemy_battleship) {
-		if (this.attack_grid[x][y] == 2) {
-			console.error('This zone has already been hit !!')
+	/**
+	 * Test wether the attack coordinates have been tested
+	 * @param  {Integer} x x Axis coordinate
+	 * @param  {Integer} y y Axis coordinate
+	 * @return {Boolean}   true if were tested, false otherwise
+	 * @this {battleship}
+	 */
+	this.areAttackCoordinatesTested = function(x,y) {
+		if(this.attack_grid[x][y] == 0 || this.attack_grid[x][y] == 1) {
+			return false;
 		}
-		if (enemy_battleship.checkPosition(x,y)) {
-			enemy_battleship.grid[x][y] = 3;
-			this.attack_grid[x][y] = 3;
-		}
-		else {
-			enemy_battleship.grid[x][y] = 2;
-			this.attack_grid[x][y] = 2;
-		}
+		return true;
 	};
 
-	this.attackMyCoordinates = function(x,y) {
-		if (this.checkPosition(x,y)) {
-			this.grid[x][y] = 3;
+	/** Attack Enemy function: Will either hit or miss target. Changes the value of the enemy grid: 0 is water, 1 is boat, 2 is test but miss, 3 is test with a hit, 4 is sunk ...
+	* @this {battleship}
+	* @param {object} enemyPlayer battleship object of the opponent
+	* @param {tuple} coordinates Attack coordinates
+	*/
+	this.attackEnemy = function(coordinates, enemyPlayer) {
+		var x = coordinates[0];
+		var y = coordinates[1];
+		if (this.areAttackCoordinatesTested(x,y)) {
+			throw new Error('This zone has already been hit !!')
+		}
+		if (enemyPlayer.battleship.checkPosition(x,y)) {
+			enemyPlayer.battleship.grid[x][y] = 3;
+			this.attack_grid[x][y] = 3;
+
+			// Find the boat that has been hit
+			var hitBoat = enemyPlayer.findHitBoat(x,y);
+			// Sink the boat if it was completely destroyed
+			enemyPlayer.sinkBoatIfDestroyed(hitBoat.name);
 		}
 		else {
-			this.grid[x][y] = 2;
+			enemyPlayer.battleship.grid[x][y] = 2;
+			this.attack_grid[x][y] = 2;
 		}
 	};
 
@@ -156,6 +168,32 @@ function battleship() {
             this.grid[boat.coordinatesList[i][0]][boat.coordinatesList[i][1]] = 1;
         }
         boat.isSet = true;
+	};
+
+	/**
+	 * Sink the boat if it has been completely destroyed (on last hit)
+	 * @param  {String} boat_name name of the boat to be sunk
+	 * @this {battleship}
+	 */
+	this.sinkBoatIfDestroyed = function(boat_name) {
+		var flag = true;
+		for (coordinates of this.boats[boat_name].coordinatesList) {
+			var x = coordinates[0];
+			var y = coordinates[1];
+			if (!this.grid[x][y] != 3) {
+				flag = false;
+				break;
+			}
+		}
+		if (flag) {
+			// Sink the boat !!
+			this.boats[boat_name].sink();
+			for (coordinates of this.boats[boat_name].coordinatesList) {
+				var x = coordinates[0];
+				var y = coordinates[1];
+				this.grid[x][y] = 4;
+			}
+		}
 	};
 };
 

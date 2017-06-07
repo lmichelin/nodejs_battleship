@@ -34,6 +34,7 @@ var game = new Vue({
 	methods: {
 		// Attack enemy cell on click
 		attack: function(row, col, event) {
+			console.log('attack done');
 			socket.emit('attack', attackCoordinates = {row: row, col: col});
 
 		},

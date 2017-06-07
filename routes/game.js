@@ -54,7 +54,43 @@ router.get('/getBattleship', function(req, res) {
 
 
 /***************************** Socket io ***********************************/
+io.sockets.on('connection', function(socket) {
 
+
+	// Get username, battleship and game of the connected user 
+	var username = socket.handshake.session.username;
+	var game = gameServer.players[username].game;
+
+	if (game) {
+
+		var battleship = gameServer.players[username].battleship;
+
+		if (!game.isAvailable()) {
+			console.log('game is not available');
+
+			// Get enemy player
+			var enemyPlayer;
+			if (game.player_one.username == gameServer.players[username]) {
+				enemyPlayer = game.player_two;
+			}
+			else {
+				enemyPlayer = game.player_one;
+			}
+
+			socket.on('attack', function(attackCoordinates) {
+				console.log('there was an attack !');
+				coordinates = [attackCoordinates.row, attackCoordinates.col];
+				battleship.attackEnemy(coordinates, enemyPlayer);
+				var response = {battleship: enemyPlayer.battleship};
+				socket.broadcast.to(game.name).emit('attack', response);
+				response = {battleship: battleship}
+				socket.to(game.name).emit('attack', response);
+			});
+
+		}
+	}
+
+});
 
 
 module.exports = router;

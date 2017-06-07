@@ -36,7 +36,7 @@
                                 <!-- row label -->
                                 <div class="divTableHeading divTableCell">{{row}}</div>
                                 <!-- cell space (boat cell) -->
-                                <div v-for='col in battleship.attack_grid.length' v-bind:class='attackCellClass(row, col)'  :value='col' v-on:click='attack(row, col)' class="divTableCell"></div>
+                                <div v-for='col in battleship.attack_grid.length' v-bind:class='attackCellClass(row, col)'  :value='col' v-on:click="attack(row, col)" class="divTableCell"></div>
                             </div>
 
                         </div>
