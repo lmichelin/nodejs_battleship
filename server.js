@@ -49,6 +49,10 @@ io.use(sharedsession(session, {
     autoSave:true  // setting autoSave:true
 }));
 
+// Initialize a client server
+var clientServer = require('./gamejs/clientServer.js');
+new clientServer(gameServer, io).init();
+
 
 /******************************************** Export relevant objects ***************************************/
 

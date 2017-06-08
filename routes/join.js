@@ -59,13 +59,13 @@ router.post('/game', function(req, res, callback) {
 /************************************** Socket io ************************************************************/
 
 
-io.sockets.on('connection', function(socket) {
-		var username = socket.handshake.session.username;
-		var player = gameServer.players[username];
-		var games = gameServer.games;
+// io.sockets.on('connection', function(socket) {
+// 		var username = socket.handshake.session.username;
+// 		var player = gameServer.players[username];
+// 		var games = gameServer.games;
 
-		socket.emit('listGames', gameServer.availableGames);
+// 		socket.emit('listGames', gameServer.availableGames);
 		
-	});
+// 	});
 
 module.exports = router;

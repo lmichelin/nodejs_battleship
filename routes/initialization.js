@@ -27,53 +27,53 @@ module.exports = router;
 /*********************************** Socket io ************************************************************/
 
 // This code will execute when the user refreshes the page ...
-io.sockets.on('connection', function(socket) {
+// io.sockets.on('connection', function(socket) {
 
-	var username = socket.handshake.session.username;
-	var game = gameServer.players[username].game;
+// 	var username = socket.handshake.session.username;
+// 	var game = gameServer.players[username].game;
 
-	// Status that will be sent to the user upon states
-	var status = {
-		status: 'waiting',
-		message: '',
-		gameRoom: '',
-	}
+// 	// Status that will be sent to the user upon states
+// 	var status = {
+// 		status: 'waiting',
+// 		message: '',
+// 		gameRoom: '',
+// 	}
 
-	// If the user has created or joined a game ...
-	if (game) {
-		var player_one = game.player_one;
-		var player_two = game.player_two;
-		//Save player socket ID
-		gameServer.players[username].saveSocketId(socket.id);
+// 	// If the user has created or joined a game ...
+// 	if (game) {
+// 		var player_one = game.player_one;
+// 		var player_two = game.player_two;
+// 		//Save player socket ID
+// 		gameServer.players[username].saveSocketId(socket.id);
 
-		// If the user is the player who created the game ...
-		if (username == player_one.username) {
-			status.message = "Waiting for players to join the game ...";
-			socket.join(game.name)
-			status.gameRoom = game.name;
-			socket.emit('status', status);
-		}
+// 		// If the user is the player who created the game ...
+// 		if (username == player_one.username) {
+// 			status.message = "Waiting for players to join the game ...";
+// 			socket.join(game.name)
+// 			status.gameRoom = game.name;
+// 			socket.emit('status', status);
+// 		}
 
-		// If the user is the player who joined the game ...
-		else {
+// 		// If the user is the player who joined the game ...
+// 		else {
 
 
-			// Send message to player one !
-			status.message = "Player " + player_two.username + " is connected ! You are ready to start the game !";
-			status.status = 'connected';
-			socket.to(game.name).emit('status', status);
+// 			// Send message to player one !
+// 			status.message = "Player " + player_two.username + " is connected ! You are ready to start the game !";
+// 			status.status = 'connected';
+// 			socket.to(game.name).emit('status', status);
 
-			// Join specific game room
-			status.message = "You are  connected with " + player_one.username + " !";
-			socket.emit('status', status);
-			socket.join(game.name);
+// 			// Join specific game room
+// 			status.message = "You are  connected with " + player_one.username + " !";
+// 			socket.emit('status', status);
+// 			socket.join(game.name);
 
-		}
-	}
-	// When the user sends a startGame, redirect both users to the setBoats page
-	socket.on('startGame', function() {
-		var response = {redirect: '/setBoats'};
-		// Send the redirect url to everyone inside the created game room
-		io.sockets.in(game.name).emit('setBoats', response)
-	})
-});
+// 		}
+// 	}
+// 	// When the user sends a startGame, redirect both users to the setBoats page
+// 	socket.on('startGame', function() {
+// 		var response = {redirect: '/setBoats'};
+// 		// Send the redirect url to everyone inside the created game room
+// 		io.sockets.in(game.name).emit('setBoats', response)
+// 	})
+// });

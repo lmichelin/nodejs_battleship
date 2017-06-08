@@ -99,6 +99,24 @@ function gameServer() {
 	 */
 	this.removePlayer = function(username) {
 		delete this.players[username];
+	};
+
+	/**
+	 * Checks if username already exists
+	 * @param  {String} username username of the new player
+	 * @return {Boolean}          true if already exists, false otherwise
+	 */	
+	this.usernameAlreadyExists = function(username) {
+		return this.players[username];
+	};
+
+	/**
+	 * checks if game name already exists
+	 * @param  {String} gameName name of the new game
+	 * @return {Boolean}          true if already exists, false otherwise
+	 */
+	this.gameNameAlreadyExists = function(gameName) {
+		return this.games[gameName];
 	}
 }
 
