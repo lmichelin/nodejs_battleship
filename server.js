@@ -77,11 +77,19 @@ var setBoats = require('./routes/setBoats');
 app.use('/setBoats', setBoats);
 var solo = require('./routes/solo');
 app.use('/solo', solo);
+var logout = require('./routes/logout');
+app.use('/logout', logout);
 
 
 // Main route
-app.get('/', function (req, res) {
-  res.render('welcome');
+app.get('/', function(req, res) {
+	var correctRoute = gameServer.sendRoute(req.session.username);
+	if (correctRoute == '/') {
+	 	res.render('welcome');
+	 }
+	 else {
+	 	res.redirect(correctRoute);
+	 }
 });
 
 /**************************************** Listen server *******************************************************/

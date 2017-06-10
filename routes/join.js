@@ -8,13 +8,13 @@ var router = express.Router(); //Create router object
 /************************************* Join routes *********************************************************/
 
 router.get('/', function(req, res) {
-	if (req.session.username) {  // If player already has a username
-		res.render('join');
-		console.log(req.session.username);
-	}
-	else { // If player does not yet have a username
-		res.render('login');
-	}
+	var correctRoute = gameServer.sendRoute(req.session.username);
+	if (correctRoute == '/join') {
+	 	res.render('join');
+	 }
+	 else {
+	 	res.redirect(correctRoute);
+	 }
 });
 
 router.post('/login', function(req, res) {

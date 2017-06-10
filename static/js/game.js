@@ -35,8 +35,8 @@ var game = new Vue({
 			this.serverMessage = response.message;
 		}.bind(this));
 
-		socket.on('disconnect', function(response) {
-			window.location.href = response.redirect;
+		socket.on('logout', function(response) {
+			window.location.href = '/logout';
 		});
 
 		// Get battleship data with grid and boats

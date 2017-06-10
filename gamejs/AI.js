@@ -60,12 +60,8 @@ function AI(game) {
 
 	this.evaluateArray = function(coordinatesList) {
 		for (coordinates of coordinatesList) {
-			var x = coordinates[0];
-			var y = coordinates[1];
-			var index = this.possibleCoordinatesArray.indexOf([x,y]);
-			console.log(this.possibleCoordinatesArray);
+			var index = this.findIndexOf(coordinates);
 			this.possibleCoordinatesArray.splice(index, 1);
-			console.log(this.possibleCoordinatesArray);
 		}
 	};
 
@@ -100,6 +96,8 @@ function AI(game) {
 			var row = this.hitCoordinates[0][0];
 			if (this.hitCoordinates[1][0] == row) {
 				// The direction of the enemy boat is horizontal
+				// Order the hitCoordinates by row
+				this.hitCoordinates.sort(function(a,b) {return a[1] - b[1]});
 				var x = this.hitCoordinates[0][0];
 				var y = this.hitCoordinates[0][1];
 				if (this.battleship.isInGrid([x, y-1])) {
@@ -115,17 +113,19 @@ function AI(game) {
 			}
 			else {
 				// The direction of the enemy boat is vertical
+				// Order the hitCoordinates by row
+				this.hitCoordinates.sort(function(a,b) {return a[0] - b[0]});
 				var x = this.hitCoordinates[0][0];
 				var y = this.hitCoordinates[0][1];
 				if (this.battleship.isInGrid([x-1, y])) {
-					this.possibleCoordinatesSubArray.push([x+1, y]);
+					this.possibleCoordinatesSubArray.push([x-1, y]);
 				}
 				// The direction of the enemy boat is vertical
 				var length = this.hitCoordinates.length;
 				x = this.hitCoordinates[length-1][0];
 				y = this.hitCoordinates[length-1][1];
 				if (this.battleship.isInGrid([x+1, y])) {
-					this.possibleCoordinatesSubArray.push([x-1, y]);
+					this.possibleCoordinatesSubArray.push([x+1, y]);
 				}
 			}
 		}
@@ -162,6 +162,14 @@ function AI(game) {
 
 		this.evaluateSubArray();
 	};
+
+	this.findIndexOf = function(coordinates) {
+		for (var i = 0; i < this.possibleCoordinatesArray.length; i++) {
+			if (coordinates[0] == this.possibleCoordinatesArray[i][0] &&  coordinates[1] == this.possibleCoordinatesArray[i][1]) {
+				return i;
+			}
+		}
+	}
 }
 
 module.exports = AI;

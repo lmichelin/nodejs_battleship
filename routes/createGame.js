@@ -10,7 +10,13 @@ var router = express.Router(); //Create router object
 /************************************* createGame routes *********************************************************/
 
 router.get('/', function(req, res) {
-	res.render('createGame');
+	var correctRoute = gameServer.sendRoute(req.session.username);
+	if (correctRoute == '/createGame') {
+	 	res.render('createGame');
+	 }
+	 else {
+	 	res.redirect(correctRoute);
+	 }
 });
 
 

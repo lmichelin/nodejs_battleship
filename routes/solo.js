@@ -6,20 +6,24 @@ var router = express.Router(); //Create router object
 
 /************************************* Join routes *********************************************************/
 router.get('/', function(req, res) {
-	req.session.username = req.sessionID;
-	req.session.save();
+	var correctRoute = gameServer.sendRoute(req.session.username);
+	if (correctRoute == '/') {
+		req.session.username = req.sessionID;
+		req.session.save();
 
-	var UserID = req.sessionID;
-
-
-	// Create new player object
-	gameServer.newPlayer(UserID);
-
-	// Create solo game with an AI
-	gameServer.createSoloGame(gameServer.players[UserID]);
+		var UserID = req.sessionID;
 
 
-	res.redirect('/setBoats');
+		// Create new player object
+		gameServer.newPlayer(UserID);
+
+		// Create solo game with an AI
+		gameServer.createSoloGame(gameServer.players[UserID]);
+		// Redirect to set boats afterwards
+		res.redirect('/setBoats');
+	} else {
+		res.redirect(correctRoute);
+	}
 });
 
 module.exports = router;

@@ -1,5 +1,8 @@
 Vue.http.options.emulateJSON = true;
 
+// Connect user with server using socket io
+var socket = io.connect();
+
 // Vue that holds the battleship grid and all the boats of our page
 var boats = new Vue({
 
@@ -26,6 +29,10 @@ var boats = new Vue({
         // Initialize drag and drop 500 ms after page load (IMPORTANT for Firefox compatibility)
         $(document).ready(function() {
             window.setTimeout(boats.initializeDragAndDrop, 500);
+        });
+
+        socket.on('logout', function(response) {
+            window.location.href = '/logout';
         });
     },
 

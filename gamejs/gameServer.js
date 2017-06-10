@@ -122,6 +122,43 @@ function gameServer() {
 	this.gameNameAlreadyExists = function(gameName) {
 		return this.games[gameName];
 	}
+
+	/**
+	 * Send the correct route depending on the status of the user
+	 * @param  {String} username username of the user
+	 * @return {String}          correct route to be sent
+	 */
+	this.sendRoute = function(username) {
+		// Check if player already has a username
+		if (username) {
+			// check if player is registered to a game
+			if (this.players[username].game) {
+				// If the player is connected to another user or is playing solo:
+				if (!this.players[username].game.isAvailable() || this.players[username].game.gameType == 'solo') {
+					// Check if boats are set
+					if (this.players[username].battleship.areBoatsSet) {
+						return '/game';
+					}
+					// If boats are not set
+					else {
+						return '/setBoats';
+					}
+				}
+				// If the player has created a multiplayer game, but no one has joined
+				else {
+					return '/createGame'; 
+				}
+			}
+			// If user already has a username
+			else {
+				return '/join'; 
+			}
+		}
+		else {
+			// If player does not yet have a username redirect to homepage
+			return '/';
+		}
+	}
 }
 
 module.exports = gameServer;
