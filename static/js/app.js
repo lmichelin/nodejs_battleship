@@ -23,8 +23,8 @@ var listGames = new Vue({
 			//console.log(this.gamesList); // FOR DEBUG
 		}.bind(this));
 
-		socket.on('disconnect', function(response) {
-			window.location.href = response.redirect;
+		socket.on('logout', function(response) {
+			window.location.href = '/logout';
 		})
 	},
 

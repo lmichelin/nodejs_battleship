@@ -1,5 +1,6 @@
 var clientServer = function(gameServer, io) {
 
+	// To avoid conflicts with socket io
 	var self = this;
 
 	self.io = io;
