@@ -10,11 +10,16 @@ var router = express.Router(); //Create router object
 router.get('/', function(req, res) {
 	var correctRoute = gameServer.sendRoute(req.session.username);
 	if (correctRoute == '/join') {
-	 	res.render('join');
-	 }
-	 else {
-	 	res.redirect(correctRoute);
-	 }
+		res.render('join');
+	}
+
+	else if (correctRoute == '/') {
+		res.render('login');
+	} 
+
+	else {
+		res.redirect(correctRoute);
+	}
 });
 
 router.post('/login', function(req, res) {

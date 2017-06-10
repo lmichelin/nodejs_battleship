@@ -11,8 +11,8 @@ var router = express.Router(); //Create router object
 router.get('/', function(req, res) {
 	var username = req.session.username;
 	if (username) {
-		io.sockets.to(game.name).emit('logout', {});
 		if (gameServer.players[username].game) {
+			io.sockets.to(gameServer.players[username].game.name).emit('logout', {});
 			gameServer.removeGame(gameServer.players[username].game.name);
 		}
 		gameServer.removePlayer(username);

@@ -1,4 +1,4 @@
-var boat = require('./boat.js'); // Require boat object
+var Boat = require('./boat.js'); // Require boat object
 
 /** @type {Object} Battleship class
 * @class battleship class with one per player with all the grids and methods
@@ -98,23 +98,17 @@ function battleship() {
 		}
 	};
 
-	var carrier = new boat('carrier', 5);
-	var battleship = new boat('battleship', 4);
-	var cruiser = new boat('cruiser', 3);
-	var submarine = new boat('submarine', 3);
-	var destroyer = new boat('destroyer', 2);
-
 	/**
 	 * Dictionnary with all the boats on this battleship player game
 	 * @this {battleship}
 	 * @type {dictionnary}
 	 */
 	this.boats = {
-		'carrier': carrier,
-		'battleship': battleship,
-		'cruiser': cruiser,
-		'submarine': submarine,
-		'destroyer': destroyer,
+		'carrier': new Boat('carrier', 5),
+		'battleship': new Boat('battleship', 4),
+		'cruiser': new Boat('cruiser', 3),
+		'submarine': new Boat('submarine', 3),
+		'destroyer': new Boat('destroyer', 2),
 	};
 
 	/**

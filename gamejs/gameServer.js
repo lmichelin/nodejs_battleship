@@ -146,7 +146,7 @@ function gameServer() {
 				}
 				// If the player has created a multiplayer game, but no one has joined
 				else {
-					return '/createGame'; 
+					return '/initialization'; 
 				}
 			}
 			// If user already has a username

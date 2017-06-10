@@ -100,14 +100,14 @@ function AI(game) {
 				this.hitCoordinates.sort(function(a,b) {return a[1] - b[1]});
 				var x = this.hitCoordinates[0][0];
 				var y = this.hitCoordinates[0][1];
-				if (this.battleship.isInGrid([x, y-1])) {
+				if (this.battleship.isInGrid([x, y-1]) && this.battleship.attack_grid[x][y-1] == 0) {
 					this.possibleCoordinatesSubArray.push([x, y-1]);
 				}
 				// The direction of the enemy boat is vertical
 				var length = this.hitCoordinates.length;
 				x = this.hitCoordinates[length-1][0];
 				y = this.hitCoordinates[length-1][1];
-				if (this.battleship.isInGrid([x, y+1])) {
+				if (this.battleship.isInGrid([x, y+1]) && this.battleship.attack_grid[x][y+1] == 0) {
 					this.possibleCoordinatesSubArray.push([x, y+1]);
 				}
 			}
@@ -117,14 +117,14 @@ function AI(game) {
 				this.hitCoordinates.sort(function(a,b) {return a[0] - b[0]});
 				var x = this.hitCoordinates[0][0];
 				var y = this.hitCoordinates[0][1];
-				if (this.battleship.isInGrid([x-1, y])) {
+				if (this.battleship.isInGrid([x-1, y]) && this.battleship.attack_grid[x-1][y] == 0) {
 					this.possibleCoordinatesSubArray.push([x-1, y]);
 				}
 				// The direction of the enemy boat is vertical
 				var length = this.hitCoordinates.length;
 				x = this.hitCoordinates[length-1][0];
 				y = this.hitCoordinates[length-1][1];
-				if (this.battleship.isInGrid([x+1, y])) {
+				if (this.battleship.isInGrid([x+1, y]) && this.battleship.attack_grid[x+1][y] == 0) {
 					this.possibleCoordinatesSubArray.push([x+1, y]);
 				}
 			}

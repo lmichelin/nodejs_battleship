@@ -11,7 +11,7 @@ var router = express.Router(); //Create router object
 
 router.get('/', function(req, res) {
 	var correctRoute = gameServer.sendRoute(req.session.username);
-	if (correctRoute == '/createGame') {
+	if (correctRoute == '/') {
 	 	res.render('createGame');
 	 }
 	 else {

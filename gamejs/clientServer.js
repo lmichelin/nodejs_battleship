@@ -64,6 +64,7 @@ var clientServer = function(gameServer, io) {
 
 				// Execute attack function
 				self.getUserBattleship(socket).attackEnemy(coordinates, enemyPlayer);
+				self.sendIAResponse(socket);
 
 				// Check if the user has won
 				if (enemyPlayer.battleship.isFleetDestroyed()) {
@@ -88,16 +89,11 @@ var clientServer = function(gameServer, io) {
 							self.handleDisconnect(socket);
 						}, 5000);
 					}
-					player.isTurn = true;
-					self.sendNextTurnStatus(socket);
 
-					console.log('array');
-					console.log(enemyPlayer.possibleCoordinatesArray);
-					console.log('subarray');
-					console.log(enemyPlayer.possibleCoordinatesSubArray);
-					console.log('hit');
-					console.log(enemyPlayer.hitCoordinates);
-					// console.log(enemyPlayer.possibleCoordinatesArray.length);
+					setTimeout(function () {
+						player.isTurn = true;
+						self.sendSoloResponse(socket);
+					}, 2000);
 				}
 
 			}
@@ -294,7 +290,7 @@ var clientServer = function(gameServer, io) {
 		socket.emit('finish', response);
 	}
 
-	self.sendNextTurnStatus = function(socket) {
+	self.sendNextTurnStatus = function(socket) { 
 		response = {
 			message: 'It is your turn to play',
 			battleship: self.getEnemyPlayer(socket).battleship
@@ -308,20 +304,32 @@ var clientServer = function(gameServer, io) {
 		socket.emit('attack', response);
 	}
 
+	self.sendIAResponse = function(socket) {
+		response = {
+			message: "It is AI's turn to play",
+			battleship: self.getUserBattleship(socket)
+		};
+		socket.emit('attack', response);
+	}
+
+	self.sendSoloResponse = function(socket) {
+		response = {
+			message: "It is your turn to play",
+			battleship: self.getUserBattleship(socket)
+		};
+		socket.emit('attack', response);
+	}
+
 	self.handleDisconnect = function(socket) {
 		var response = {
 			message: 'You are not connected',
 			redirect: '/'
 		}
-		socket.emit('disconnect', response);
-		self.gameServer.removePlayer(self.getUsername(socket));
+		socket.emit('logout', response);
 		socket.disconnect();
 	}
 
 	self.disconnectAllPlayersInGame = function(socket) {
-		// Delete the game
-		self.gameServer.removeGame(self.getUserGame(socket));
-
 		setTimeout(function() {
 			// Disconnect enemy player
 			self.handleDisconnect(self.io.sockets.connected[self.getEnemyPlayer(socket).socketId]);
