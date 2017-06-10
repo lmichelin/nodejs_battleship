@@ -211,7 +211,7 @@ var clientServer = function(gameServer, io) {
 	self.sendWaitStatus = function(socket) {
 		var status = {
 			status: 'waiting',
-			message: 'Waiting for players to join the game ...',
+			message: 'Waiting for players to join the game...',
 		}
 		socket.emit('status', status);
 	}
