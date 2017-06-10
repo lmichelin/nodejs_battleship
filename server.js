@@ -75,6 +75,8 @@ var game = require('./routes/game');
 app.use('/game', game);
 var setBoats = require('./routes/setBoats');
 app.use('/setBoats', setBoats);
+var solo = require('./routes/solo');
+app.use('/solo', solo);
 
 
 // Main route

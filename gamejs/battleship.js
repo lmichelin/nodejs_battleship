@@ -72,7 +72,7 @@ function battleship() {
 
 	/** Attack Enemy function: Will either hit or miss target. Changes the value of the enemy grid: 0 is water, 1 is boat, 2 is test but miss, 3 is test with a hit, 4 is sunk ...
 	* @this {battleship}
-	* @param {object} enemyPlayer battleship object of the opponent
+	* @param {object} enemyPlayer player object of the opponent
 	* @param {tuple} coordinates Attack coordinates
 	*/
 	this.attackEnemy = function(coordinates, enemyPlayer) {
@@ -87,10 +87,7 @@ function battleship() {
 			this.attack_grid[x][y] = 3;
 
 			// Find the boat that has been hit
-			console.log(x, y);
 			var hitBoat = enemyPlayer.battleship.findHitBoat(x, y);
-			console.log(hitBoat.name);
-			console.log(hitBoat.isSunk);
 			// Sink the boat if it was completely destroyed
 			enemyPlayer.battleship.sinkBoatIfDestroyed(hitBoat.name);
 			this.sinkEnemyBoatIfDestroyed(hitBoat.name, enemyPlayer);
@@ -158,7 +155,7 @@ function battleship() {
 		var boat = this.boats[boat_name];
 		var errors = [];
 		for (var i = 0; i < boat.coordinatesList.length; i++) {
-			if (!isInGrid(boat.coordinatesList[i])) {
+			if (!this.isInGrid(boat.coordinatesList[i])) {
 				errors.push(boat.name + ' is not perfectly in grid')
 			}
 			if (!isZoneAvailable(boat.coordinatesList[i], this.grid)) {
@@ -220,7 +217,6 @@ function battleship() {
 			for (coordinates of this.boats[boat].coordinatesList) {
 				console.log(coordinates);
 				if (coordinates[0] == x && coordinates[1] == y) {
-					console.log('findHitBoat returned true');
 					return this.boats[boat];
 				}
 			}
@@ -235,7 +231,6 @@ function battleship() {
 	this.sinkBoatIfDestroyed = function(boat_name) {
 		var flag = true;
 		for (coordinates of this.boats[boat_name].coordinatesList) {
-			console.log(coordinates);
 			var x = coordinates[0];
 			var y = coordinates[1];
 			if (this.grid[x][y] != 3) {
@@ -243,7 +238,6 @@ function battleship() {
 				break;
 			}
 		}
-		console.log(flag);
 		if (flag) {
 			// Sink the boat !!
 			this.boats[boat_name].sink();
@@ -264,23 +258,21 @@ function battleship() {
 			}
 		}
 	}
-};
 
-
-
-/**
- * Test to check wether these coordinates can be placed on the grid
- * @param  {tuple}  coordinates coordinates of the zone
- * @return {Boolean}
- */
-function isInGrid(coordinates) {
-    if (Math.min(9, Math.max(coordinates[0],0)) != coordinates[0] ) {
-        return false;
-    }
-    if (Math.min(9, Math.max(coordinates[1],0)) != coordinates[1] ) {
-        return false;
-    }
-    return true;
+	/**
+	 * Test to check wether these coordinates can be placed on the grid
+	 * @param  {tuple}  coordinates coordinates of the zone
+	 * @return {Boolean}
+	 */
+	this.isInGrid = function(coordinates) {
+		if (Math.min(9, Math.max(coordinates[0],0)) != coordinates[0] ) {
+	        return false;
+	    }
+	    if (Math.min(9, Math.max(coordinates[1],0)) != coordinates[1] ) {
+	        return false;
+	    }
+	    return true;
+	};
 };
 
 /**

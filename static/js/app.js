@@ -22,6 +22,10 @@ var listGames = new Vue({
 			this.gamesList  = availableGames;
 			//console.log(this.gamesList); // FOR DEBUG
 		}.bind(this));
+
+		socket.on('disconnect', function(response) {
+			window.location.href = response.redirect;
+		})
 	},
 
 	// Methods we want to use in our application are registered here

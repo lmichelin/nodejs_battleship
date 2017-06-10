@@ -29,6 +29,10 @@ var gameStatus = new Vue({
                 $('button').removeClass('hidden');
             }
         }.bind(this));
+
+        socket.on('disconnect', function(response) {
+            window.location.href = response.redirect;
+        })
     },
 
     // All functions to be used with the vue

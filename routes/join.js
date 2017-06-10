@@ -46,26 +46,10 @@ router.post('/game', function(req, res, callback) {
 	if (game.isAvailable()) {
 		gameServer.joinMultiplayerGame(gameName, player);
 		res.send({redirect: '/initialization'});
-		console.log('post successful game is not full');
 	} else {
 		isGameFull = true;
 		res.send({redirect: '/join'});
-		console.log('post successful game is full');
 	}
 });
-
-
-
-/************************************** Socket io ************************************************************/
-
-
-// io.sockets.on('connection', function(socket) {
-// 		var username = socket.handshake.session.username;
-// 		var player = gameServer.players[username];
-// 		var games = gameServer.games;
-
-// 		socket.emit('listGames', gameServer.availableGames);
-		
-// 	});
 
 module.exports = router;

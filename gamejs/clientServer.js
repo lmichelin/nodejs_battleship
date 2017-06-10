@@ -6,95 +6,194 @@ var clientServer = function(gameServer, io) {
 
 	self.gameServer = gameServer;
 
+	// Initialize socket io
 	self.init = function() {
 		// Fired upon a connection
 		self.io.on('connection', function(socket) {
-			self.handleConnection(socket);
+
+			// If the player is not registered (could happen if server restarts ...)
+			if (self.getUsername(socket)) {
+
+				// Check if the player has already joined a game
+				if (self.getUserGame(socket)) {
+
+					// If gametype is solo 
+					if (self.getUserGame(socket).gameType == 'solo') {
+						self.handleSoloConnection(socket);
+
+						// If game type is multiplayer
+					} else {
+						self.handleMultiplayerInitialization(socket);
+						self.handleMultiplayerGameConnection(socket);
+					}
+
+					// If the player is joining a game, send him available games
+				} else {
+					self.sendAvailableGames(socket);
+				}
+
+				// The user is not registered ! Send him back to the first page
+			} else {
+				self.handleDisconnect(socket);
+			}
 		});
 	};
 
-	self.handleConnection = function(socket) {
-		var username = self.getUsername(socket);
+	/**
+	 * Socket io handler for the solo game type (the opponent is an ai)
+	 * @param  {socket} socket socket of the connected user
+	 * @this {clientServer}
+	 */
+	self.handleSoloConnection = function(socket) {
+		var player = self.gameServer.players[self.getUsername(socket)];
 		var game = self.getUserGame(socket);
 
-		// If the user has created or joined a game ...
-		if (game) {
-			var player_one = game.player_one;
-			var player_two = game.player_two;
+		// Let the user begin !
+		player.isTurn = true;
+		// Enemy player is AI
+		var enemyPlayer = game.player_two;
 
-			// If the user has created or joined a game, put them in the game room
-			self.joinGameRoom(socket);
+		// Set AI boats
+		enemyPlayer.battleship.randomSetBoats();
 
-			//Save player socket ID
-			self.gameServer.players[username].saveSocketId(socket.id);
+		socket.on('attack', function(attackCoordinates) {
+			if (player.isTurn) {
+				// Get attack coordinates
+				var coordinates = [attackCoordinates.row, attackCoordinates.col];
 
-			// If the user is the player who created the game, send wait status (he has to wait for a player to join)
-			if (username == player_one.username) {
-				self.sendWaitStatus(socket);
+				// Execute attack function
+				self.getUserBattleship(socket).attackEnemy(coordinates, enemyPlayer);
+
+				// Check if the user has won
+				if (enemyPlayer.battleship.isFleetDestroyed()) {
+					self.sendGameOverStatus(socket);
+					//Disconnect player after 5 seconds
+					setTimeout(function() {
+						self.handleDisconnect(socket);
+					}, 5000);
+				}
+				else {
+					// Set the turn to the AI
+					player.isTurn = false;
+
+					var AIAttack_coordinates = enemyPlayer.guessCoordinates();
+					enemyPlayer.attackEnemy(AIAttack_coordinates, player);
+
+					// Check if the AI has won
+					if (self.getUserBattleship(socket).isFleetDestroyed()) {
+						self.sendGameOverStatus(socket);
+						//Disconnect player after 5 seconds
+						setTimeout(function() {
+							self.handleDisconnect(socket);
+						}, 5000);
+					}
+					player.isTurn = true;
+					self.sendNextTurnStatus(socket);
+
+					console.log('array');
+					console.log(enemyPlayer.possibleCoordinatesArray);
+					console.log('subarray');
+					console.log(enemyPlayer.possibleCoordinatesSubArray);
+					console.log('hit');
+					console.log(enemyPlayer.hitCoordinates);
+				}
+
 			}
+		})
+	};
 
-			// If the user is the player who joined the game, send connect status to all players
-			else {
-				self.sendConnectStatus(socket);
-			}
+	/**
+	 * Socket io handler for th initialization page (registers the user id and puts him within a game with another user)
+	 * @param  {socket} socket socket of the connected user
+	 * @this {clientServer}
+	 */
+	self.handleMultiplayerInitialization = function(socket) {
+		var username = self.getUsername(socket);
+		var game = self.getUserGame(socket);
+		var player_one = game.player_one;
+		var player_two = game.player_two;
+
+		// If the user has created or joined a game, put them in the game room
+		self.joinGameRoom(socket);
+
+		//Save player socket ID
+		self.gameServer.players[username].saveSocketId(socket.id);
+
+		// If the user is the player who created the game, send wait status (he has to wait for a player to join)
+		if (username == player_one.username) {
+			self.sendWaitStatus(socket);
 		}
 
-		// If the user is joining a game, send him available games
+		// If the user is the player who joined the game, send connect status to all players
 		else {
-			self.sendAvailableGames(socket);
+			self.sendConnectStatus(socket);
 		}
 
 		// When the user sends a startGame, redirect both users to the setBoats page
 		socket.on('startGame', function() {
 			self.sendSetBoatStatus(socket);
 		});
+	}
+
+	/**
+	 * Socket io handler for the game page (main page for the game)
+	 * @param  {socket} socket socket of the connected user
+	 * @this {cleintServer}
+	 */
+	self.handleMultiplayerGameConnection = function(socket) {
+		var username = self.getUsername(socket);
+
+		var game = self.getUserGame(socket);
 
 		// If both users are connected and user boats have been set
-		if (game) {
-			if (!game.isAvailable()) {
-				// Get enemy player
-				var enemyPlayer = self.getEnemyPlayer(socket);
+		if (!game.isAvailable()) {
+			// Get enemy player
+			var enemyPlayer = self.getEnemyPlayer(socket);
 
-				// If the other player has not set the boats yet, send the message to the user
-				if (!enemyPlayer.battleship.areBoatsSet) {
-					self.sendWaitForBoatStatus(socket);
-					// Since self user is the first to have his boats set, give him the first turn !
-					self.gameServer.players[self.getUsername(socket)].isTurn = true;
-				}
-
-				// If both players have boats set start game !
-				else {
-					self.sendStartGameStatus(socket);
-				}
-
-				// Set the attack event (if it is the turn of the user, he may maake attack events)
-				socket.on('attack', function(attackCoordinates) {
-					if (enemyPlayer.battleship.areBoatsSet && gameServer.players[username].isTurn) {
-						// Get attack coordinates
-						coordinates = [attackCoordinates.row, attackCoordinates.col];
-
-						// Execute attack function
-						self.getUserBattleship(socket).attackEnemy(coordinates, enemyPlayer);
-
-						// Check if the user has won
-						if (enemyPlayer.battleship.isFleetDestroyed()) {
-							self.sendGameOverStatus(socket);
-						}
-
-						//  If there is no victory ...
-						else {
-							// Change user's turn:
-							gameServer.players[username].isTurn = false;
-							enemyPlayer.isTurn = true;
-
-							// Send the response to both users
-							self.sendNextTurnStatus(socket);
-						}
-					}
-				});
+			// If the other player has not set the boats yet, send the message to the user
+			if (!enemyPlayer.battleship.areBoatsSet) {
+				self.sendWaitForBoatStatus(socket);
+				// Since our user is the first to have his boats set, give him the first turn !
+				self.gameServer.players[self.getUsername(socket)].isTurn = true;
 			}
+
+			// If both players have boats set start game !
+			else {
+				self.sendStartGameStatus(socket);
+			}
+
+			// Set the attack event (if it is the turn of the user, he may make attack events)
+			socket.on('attack', function(attackCoordinates) {
+				if (enemyPlayer.battleship.areBoatsSet && gameServer.players[username].isTurn) {
+					// Get attack coordinates
+					var coordinates = [attackCoordinates.row, attackCoordinates.col];
+
+					// Execute attack function
+					self.getUserBattleship(socket).attackEnemy(coordinates, enemyPlayer);
+
+					// Check if the user has won
+					if (enemyPlayer.battleship.isFleetDestroyed()) {
+						self.sendGameOverStatus(socket);
+						//Disconnect players
+						self.disconnectAllPlayersInGame(socket);
+					}
+
+					//  If there is no victory ...
+					else {
+						// Change user's turn:
+						self.gameServer.players[username].isTurn = false;
+						enemyPlayer.isTurn = true;
+
+						// Send the response to both users
+						self.sendNextTurnStatus(socket);
+					}
+				}
+			});
 		}
 	}
+
+
+	/******************************** Methods *************************************/
 
 	self.getUserGame = function(socket) {
 		return self.gameServer.players[socket.handshake.session.username].game;
@@ -156,8 +255,7 @@ var clientServer = function(gameServer, io) {
 		var username = self.getUsername(socket);
 		if (game.player_one.username == username) {
 			return game.player_two;
-		}
-		else {
+		} else {
 			return game.player_one;
 		}
 	}
@@ -173,27 +271,61 @@ var clientServer = function(gameServer, io) {
 
 	self.sendStartGameStatus = function(socket) {
 		var response = {
-			message: 'It is your turn to play',
-		}
-		// Send message to both players according to whose turn it is to play
+				message: 'It is your turn to play',
+			}
+			// Send message to both players according to whose turn it is to play
 		socket.broadcast.to(self.getEnemyPlayer(socket).socketId).emit('wait', response);
 		response.message = "It is " + self.getEnemyPlayer(socket).username + "'s turn to play";
 		socket.emit('wait', response);
 	}
 
 	self.sendGameOverStatus = function(socket) {
-		var response = {message: 'You have lost ! Better luck next time !', battleship: self.getEnemyPlayer(socket).battleship};
+		var response = {
+			message: 'You have lost ! Better luck next time !',
+			battleship: self.getEnemyPlayer(socket).battleship
+		};
 		socket.broadcast.to(self.getEnemyPlayer(socket).socketId).emit('finish', response);
-		response = {message: 'You won !', battleship: self.getUserBattleship(socket)};
+		response = {
+			message: 'You won !',
+			battleship: self.getUserBattleship(socket)
+		};
 		socket.emit('finish', response);
 	}
 
 	self.sendNextTurnStatus = function(socket) {
-		response = {message: 'It is your turn to play', battleship: self.getEnemyPlayer(socket).battleship};
+		response = {
+			message: 'It is your turn to play',
+			battleship: self.getEnemyPlayer(socket).battleship
+		};
 		socket.broadcast.to(self.getEnemyPlayer(socket).socketId).emit('attack', response);
 
-		response = {message: "It is " + self.getEnemyPlayer(socket).username + "'s turn to play", battleship: self.getUserBattleship(socket)};
+		response = {
+			message: "It is " + self.getEnemyPlayer(socket).username + "'s turn to play",
+			battleship: self.getUserBattleship(socket)
+		};
 		socket.emit('attack', response);
+	}
+
+	self.handleDisconnect = function(socket) {
+		var response = {
+			message: 'You are not connected',
+			redirect: '/'
+		}
+		socket.emit('disconnect', response);
+		self.gameServer.removePlayer(self.getUsername(socket));
+		socket.disconnect();
+	}
+
+	self.disconnectAllPlayersInGame = function(socket) {
+		// Delete the game
+		self.gameServer.removeGame(self.getUserGame(socket));
+
+		setTimeout(function() {
+			// Disconnect enemy player
+			self.handleDisconnect(self.io.sockets.connected[self.getEnemyPlayer(socket).socketId]);
+			// Disconnect the player
+			self.handleDisconnect(socket);
+		}, 5000);
 	}
 };
 

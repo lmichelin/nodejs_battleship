@@ -1,5 +1,6 @@
 var player = require('./player.js'); // Require player object
 var game = require('./game.js'); // Require game object
+var AI = require('./AI.js'); // require AI object
 
 /**
  * Main server object: Responsible for all game and player management.
@@ -42,9 +43,12 @@ function gameServer() {
 	 * @param  {player} player_one Player object who will play the game
 	 * @this {gameServer}
 	 */
-	this.createSoloGame = function(player_one) {
-		this.games[player_one] = new game(player_one, player_one);
-		this.games[player_one].gameType = 'solo'; // Set gameType to solo
+	this.createSoloGame = function(player) {
+		var Game = new game(player.username, player);
+		this.games[player.username] = Game;
+		Game.gameType = 'solo'; // Set gameType to solo
+		Game.player_two = new AI(Game);
+		this.players[player.username].game = Game;
 	};
 
 	/**

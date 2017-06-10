@@ -13,7 +13,7 @@ router.get('/', function(req, res) {
 		// check if player is in a game
 		if (gameServer.players[username].game) {
 			// Check if another player has joined the game
-			if (!gameServer.players[username].game.isAvailable()) {
+			if (!gameServer.players[username].game.isAvailable() || gameServer.players[username].game.gameType == 'solo') {
 				res.render('setBoats');
 			}
 			// If no player has joined the game redirect to initialize page
@@ -58,8 +58,6 @@ router.post('/sendBoats', function(req, res) {
 	// Make an error array to store all error messages for the user
 	var errors = [];
 
-	console.log(req.body);
-
 	if (typeof req.body.randomSet != "undefined") {
 		battleship.randomSetBoats();
 	}
@@ -100,8 +98,6 @@ router.post('/sendBoats', function(req, res) {
 
 	// If errors have been found send an error status to the user (status 400)
 	if (errors.length != 0) {
-		console.log(errors);
-		console.log('Error on boats post !');
 		res.status(400).send({errors: errors});
 	}
 
