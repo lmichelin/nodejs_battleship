@@ -138,14 +138,14 @@ var boats = new Vue({
         // match boat cell with grid cell and return grid coordinates
         findCase: function(left, top) {
             for (var i = 1; i <= this.battleship.grid.length; i++) { // IMPORTANT We need 11 values here ! If we reach the last value, it would mean that no cells matched coordinates
-                var pos_top = $("#grid > .divTableBody > .divTableRow[value='" + i + "']").offset().top;
+                var pos_top = $("#myGrid > .divTableBody > .divTableRow[value='" + i + "']").offset().top;
                 if (pos_top == top) {
                     break;
                 }
             }
             var k = Math.min(i, 10); // If there are no matches within the rows, set i back to 10 so that the rows don't return UNDEFINED
             for (var j = 1; j <= this.battleship.grid.length; j++) { // IMPORTANT We need 11 values here ! If we reach the last value, it would mean that no cells matched coordinates
-                var pos_left = $("#grid > .divTableBody > .divTableRow[value='" + k + "'] > .divTableCell[value='" + j + "']").offset().left;
+                var pos_left = $("#myGrid > .divTableBody > .divTableRow[value='" + k + "'] > .divTableCell[value='" + j + "']").offset().left;
                 //console.log(left, pos_left, top, pos_top); // FOR DEBUG ONLY
                 if (pos_left == left) {
                     break;

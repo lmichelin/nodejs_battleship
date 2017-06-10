@@ -9,7 +9,7 @@ Il est possible de jouer à 2 en réseau, ou tout seul face à une IA présente 
 
 * Backend : `NodeJS, Express, EJS`
 * Frontend : `HTML, CSS, Bootstrap, VueJS`
-* Communication client-server : `socket.io`
+* Communication temps-réel client-server : `socket.io`
 
 ## Installation en local
 
