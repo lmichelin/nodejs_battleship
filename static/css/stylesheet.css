@@ -1,15 +1,29 @@
+@import url('https://fonts.googleapis.com/css?family=Ubuntu');
+
 @font-face {
 	font-family: WarWound;
 	src: url("GimmeDanger.ttf");
 }
 
+
 body {
 	background-image: url("https://images5.alphacoders.com/539/thumb-1920-539466.jpg");
+	font-family: 'Ubuntu', sans-serif;
 	color: white;
 }
 
 h1, h2, .divTableHeading {
 	font-family: WarWound;
+}
+
+.centerVertical {
+  position:absolute;
+  top:50%;
+  left:50%;
+  padding:15px;
+  -ms-transform: translateX(-50%) translateY(-50%);
+  -webkit-transform: translate(-50%,-50%);
+  transform: translate(-50%,-50%);
 }
 
 /* Table with divs */

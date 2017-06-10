@@ -9,15 +9,17 @@
         <title>The Battleship Game</title>
     </head>
     <body>
-        <h1 class="text-center">The Battleship Game</h1><br>
+        <h1 class="text-center"><br>The Battleship Game</h1><br>
         <div id="listGames">
-          <div class="container">
-            <div class="col-xs-6 alert alert-info col-xs-offset-3">
-              <h3 class="text-center no-margin">Available games</h3>
-              <div class="radio" v-for='element in gamesList'>
-                <label><input type="radio" name="optradio" :value="element.name" v-model="picked">{{element.name}}</label>
-              </div>
+          <div class="alert alert-info centerVertical">
+            <h3 class="text-center no-margin">Pick a game</h3><br>
+            <div class="radio" v-for='element in gamesList'>
+              <label><input type="radio" name="optradio" :value="element.name" v-model="picked">{{element.name}}</label>
+            </div>
+            <br>
+            <div class="text-center">
               <button class="btn btn-primary" id='button' v-on:click="Choose">Choose Game</button>
+              <a href="/logout"><button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-log-out"></span> &nbsp;Cancel & leave game</button></a>
             </div>
           </div>
 
