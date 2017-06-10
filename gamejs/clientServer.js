@@ -96,6 +96,7 @@ var clientServer = function(gameServer, io) {
 					console.log(enemyPlayer.possibleCoordinatesSubArray);
 					console.log('hit');
 					console.log(enemyPlayer.hitCoordinates);
+					// console.log(enemyPlayer.possibleCoordinatesArray.length);
 				}
 
 			}
