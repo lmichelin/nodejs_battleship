@@ -35,7 +35,7 @@ var boats = new Vue({
             // Check if boat is already set, if not the boat will reset to its original position
             if (this.battleship.boats[boat_name].isSet) {
                 this.reset(boat_name);
-                this.errors.push('You cannot rotate if the boat is already set !!');
+                this.errors.push('You cannot rotate if the boat is already set !');
             }
             else {
 
@@ -188,12 +188,12 @@ var boats = new Vue({
             for (var i = 0; i < boat.coordinatesList.length; i++) {
                 // Check if the boat is not in the grid
                 if (!this.isInGrid(boat.coordinatesList[i])) {
-                    errors.push(boat.name + ' is not perfectly in grid');
+                    errors.push(boat.name + ' is not perfectly in grid !');
                     break;
                 }
                 // Check if the boat is following game rules (not boats must touch each other)
                 if (!this.isZoneAvailable(boat.coordinatesList[i])) {
-                    errors.push('Zone error, ' + boat.name + ' will be too close to another ship');
+                    errors.push('Zone error, ' + boat.name + ' will be too close to another ship !');
                     break;
                 }
             }

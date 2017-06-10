@@ -156,10 +156,10 @@ function battleship() {
 		var errors = [];
 		for (var i = 0; i < boat.coordinatesList.length; i++) {
 			if (!this.isInGrid(boat.coordinatesList[i])) {
-				errors.push(boat.name + ' is not perfectly in grid')
+				errors.push(boat.name + ' is not perfectly in grid !')
 			}
 			if (!isZoneAvailable(boat.coordinatesList[i], this.grid)) {
-				errors.push('Zone error, ' + boat.name + ' will be too close to another ship')
+				errors.push('Zone error, ' + boat.name + ' will be too close to another ship !')
 			}
 		}
 		if (errors.length == 0) {
@@ -193,9 +193,9 @@ function battleship() {
 	this.randomSetBoats = function () {
 		for (var boat in this.boats) {
 			while (!this.boats[boat].isSet) {
-				var i = Math.floor(Math.random() * 10) + 1; // rand int [1..10]
-				var j = Math.floor(Math.random() * 10) + 1; // rand int [1..10]
-				var rnd = Math.floor(Math.random() + 0.5); // rand boolean
+				var i = Math.floor(Math.random() * 10); // random int [0..9]
+				var j = Math.floor(Math.random() * 10); // random int [0..9]
+				var rnd = Math.floor(Math.random() + 0.5); // random boolean
 				var dir = "down".repeat(rnd) + "right".repeat(1-rnd);
 				this.boats[boat].setPosition([i, j], dir);
 				this.boats[boat].setCoordinatesList();

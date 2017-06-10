@@ -19,13 +19,15 @@
                 <h1 class="text-center title">The Battleship Game</h1>
             </div>
 
-            <div class='alert'>{{serverMessage}}</div>
+            <a id="logoutButton" href="/logout"><button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-log-out"></span> &nbsp;Cancel & leave game</button></a>
+
+            <div v-if="serverMessage!=''" id="serverMessage" style="display: inline;" class='alert alert-info'><span class="glyphicon glyphicon-info-sign"></span> &nbsp;{{serverMessage}}</div>
 
             <!-- grid -->
             <div class="row">
                 <!-- attack grid -->
                 <div class="col-sm-6 text-center no-padding">
-                    <h2 style="padding-left: 45px;" class="title">Attack Grid</h2>
+                    <h3 style="padding-left: 45px;" class="title">Attack Grid</h3>
                     <div id="attackGrid" class="divTable center">
                         <div class="divTableBody">
                             <div class="divTableHeading divTableCell"></div>
@@ -47,7 +49,7 @@
 
                 <!-- Player grid -->
                 <div class="col-sm-5 text-center no-padding">
-                    <h2 style="padding-left: 45px;" class="title">Our ships</h2>
+                    <h3 style="padding-left: 45px;" class="title">Our ships</h3>
                     <div id="myGrid" class="divTable center">
                         <div class="divTableBody">
                             <div class="divTableHeading divTableCell"></div>
@@ -65,11 +67,6 @@
 
                             <p><br></p>
                         </div>
-                    </div>
-                </div>
-                <div class="col-sm-2">
-                    <div v-for='error in errors' class="alert alert-danger" role="alert">
-                        {{error}}
                     </div>
                 </div>
 

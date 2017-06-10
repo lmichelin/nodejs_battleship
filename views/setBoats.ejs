@@ -50,14 +50,17 @@
         </div>
 
         <!-- Validate setBoats -->
+        <span style="margin-left:45px;"></span>
         <button v-on:click='randomSetAndSubmitBoats' type="button" class="btn btn-primary title">Random set & submit</button>
-        <button v-on:click='submitBoats' type="button" class="btn btn-primary title">Submit</button>
+        <button v-on:click='submitBoats' type="button" class="btn btn-success title">Submit</button>
+        <a href="/logout"><button type="button" class="btn btn-danger">Cancel & leave game</button></a>
 
     </div>
 
     <div class="col-sm-3">
         <div v-for='error in errors' class="alert alert-danger" role="alert">
-            {{error}}
+          <span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>
+            &nbsp;{{error}}
         </div>
     </div>
 
