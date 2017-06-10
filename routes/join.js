@@ -7,7 +7,9 @@ var router = express.Router(); //Create router object
 
 /************************************* Join routes *********************************************************/
 
+// Get the join page
 router.get('/', function(req, res) {
+	// Check if the user is using the correct route
 	var correctRoute = gameServer.sendRoute(req.session.username);
 	if (correctRoute == '/join') {
 		res.render('join');
@@ -17,21 +19,31 @@ router.get('/', function(req, res) {
 		res.render('login');
 	} 
 
+	// If the user is not using the correct route, send him to the correct route
 	else {
 		res.redirect(correctRoute);
 	}
 });
 
+// Retrieve login information when the user whises to join a game
 router.post('/login', function(req, res) {
 	// Get all the form elements
 	var username = req.body.username;
 
-	// Add new player
-	req.session.username = username; //Save player username in his session
-	req.session.save();
-	gameServer.newPlayer(username);
+	// check if the username already exists
+	if (gameServer.players[username]) {
+		res.status(406).send({message: "Username " + username + " already exists"})
+	}
 
-	res.redirect('/join');
+	// If the username does not exist, add it to the server object
+	else {
+		// Add new player
+		req.session.username = username; //Save player username in his session
+		req.session.save();
+		gameServer.newPlayer(username);
+
+		res.redirect('/join');
+	}
 });
 
 router.post('/game', function(req, res, callback) {

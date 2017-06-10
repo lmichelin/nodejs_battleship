@@ -1,10 +1,11 @@
 var clientServer = function(gameServer, io) {
 
-	// To avoid conflicts with socket io
+	// To avoid conflicts with socket iom rename this to self
 	var self = this;
 
 	self.io = io;
 
+	// Get the game server object
 	self.gameServer = gameServer;
 
 	// Initialize socket io
@@ -12,7 +13,7 @@ var clientServer = function(gameServer, io) {
 		// Fired upon a connection
 		self.io.on('connection', function(socket) {
 
-			// If the player is not registered (could happen if server restarts ...)
+			// If the player is registered 
 			if (self.getUsername(socket)) {
 
 				// Check if the player has already joined a game
@@ -33,7 +34,7 @@ var clientServer = function(gameServer, io) {
 					self.sendAvailableGames(socket);
 				}
 
-				// The user is not registered ! Send him back to the first page
+				// The user is not registered (could happen if server restarts ...) ! Send him back to the first page
 			} else {
 				self.handleDisconnect(socket);
 			}
@@ -101,7 +102,8 @@ var clientServer = function(gameServer, io) {
 	};
 
 	/**
-	 * Socket io handler for th initialization page (registers the user id and puts him within a game with another user)
+	 * Socket io handler for th initialization page (registers the user id and puts him within a game with another user
+	 * before setting the boats)
 	 * @param  {socket} socket socket of the connected user
 	 * @this {clientServer}
 	 */
@@ -122,7 +124,7 @@ var clientServer = function(gameServer, io) {
 			self.sendWaitStatus(socket);
 		}
 
-		// If the user is the player who joined the game, send connect status to all players
+		// If the user is the player who joined the game, send connect status the other player in the game telling him a player has joined
 		else {
 			self.sendConnectStatus(socket);
 		}

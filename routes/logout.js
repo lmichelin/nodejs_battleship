@@ -14,6 +14,9 @@ router.get('/', function(req, res) {
 		if (gameServer.players[username].game) {
 			io.sockets.to(gameServer.players[username].game.name).emit('logout', {});
 			gameServer.removeGame(gameServer.players[username].game.name);
+
+			// update available games
+			gameServer.updateAvailableGames();
 		}
 		gameServer.removePlayer(username);
 	}

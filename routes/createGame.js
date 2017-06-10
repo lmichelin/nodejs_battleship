@@ -28,12 +28,12 @@ router.post('/', function(req, res) {
 
 	// Check if username aleady exists
 	if (gameServer.usernameAlreadyExists(username)) {
-		res.status(205).send({message: "Username " + username + " already exists"});
+		res.status(406).send({message: "Username " + username + " already exists"});
 	}
 
 	// Check if game name already exists
-	if (gameServer.gameNameAlreadyExists(gameName)) {
-		res.status(205).send({message: "Game name " + gameName + " already exists"});
+	else if (gameServer.gameNameAlreadyExists(gameName)) {
+		res.status(406).send({message: "Game name " + gameName + " already exists"});
 	}
 
 	// Add new player
@@ -50,8 +50,7 @@ router.post('/', function(req, res) {
 		//Send the updated version of all available games to the other users
 		io.emit('listGames', gameServer.availableGames);
 
-
-		res.redirect('/initialization'); //Redirect to waiting area for another player to join the game !
+		res.send({redirect: '/initialization'}); //Redirect to waiting area for another player to join the game !
 	}
 });
 

@@ -36,6 +36,8 @@ function gameServer() {
 	this.joinMultiplayerGame = function(gameName, player_two) {
 		player_two.game = this.games[gameName];
 		this.games[gameName].player_two = player_two; 
+		// Update available games
+		this.updateAvailableGames();
 	};
 
 	/**

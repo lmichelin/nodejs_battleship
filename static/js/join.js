@@ -13,28 +13,32 @@ var listGames = new Vue({
 	// for the application
 	data: {
 		gamesList : {},
-		picked : ''
+		picked : '',
+		message: '', // Message to be sent to the user if there are any errors
 	},
 
 	// This function is called only when the vue instance is created
 	created: function() {
+		// Demand available games when the available games list is updated
 		socket.on('listGames', function(availableGames) {
 			this.gamesList  = availableGames;
-			//console.log(this.gamesList); // FOR DEBUG
 		}.bind(this));
 
+		// Logout socket
 		socket.on('logout', function(response) {
-			window.location.href = '/logout';
-		})
+			window.location.href = '/logout'; // Redirect to logout when the logout message is received
+		});
 	},
 
 	// Methods we want to use in our application are registered here
 	methods: {
 		Choose: function(event) {
+			// If the user has not picked a game, send error message !
 			if (this.picked == '') {
-				alert('Please choose a game from the list');
+				this.message = 'Please choose a game from the list';
 			}
 			else {
+				// If the user has picked an available game, join the game
 				this.$http.post('/join/game', {picked: this.picked})
 					.then(function(response) {
 						window.location.href = response.data.redirect;
