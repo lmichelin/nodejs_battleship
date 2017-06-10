@@ -19,7 +19,7 @@ var clientServer = function(gameServer, io) {
 				// Check if the player has already joined a game
 				if (self.getUserGame(socket)) {
 
-					// If gametype is solo 
+					// If gametype is solo
 					if (self.getUserGame(socket).gameType == 'solo') {
 						self.handleSoloConnection(socket);
 
@@ -94,7 +94,7 @@ var clientServer = function(gameServer, io) {
 					setTimeout(function () {
 						player.isTurn = true;
 						self.sendSoloResponse(socket);
-					}, 2000);
+					}, 500);
 				}
 
 			}
@@ -292,7 +292,7 @@ var clientServer = function(gameServer, io) {
 		socket.emit('finish', response);
 	}
 
-	self.sendNextTurnStatus = function(socket) { 
+	self.sendNextTurnStatus = function(socket) {
 		response = {
 			message: 'It is your turn to play',
 			battleship: self.getEnemyPlayer(socket).battleship
