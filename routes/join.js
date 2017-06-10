@@ -42,7 +42,7 @@ router.post('/login', function(req, res) {
 		req.session.save();
 		gameServer.newPlayer(username);
 
-		res.redirect('/join');
+		res.send({redirect: '/join'});
 	}
 });
 
