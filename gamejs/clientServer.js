@@ -13,7 +13,7 @@ var clientServer = function(gameServer, io) {
 		// Fired upon a connection
 		self.io.on('connection', function(socket) {
 
-			// If the player is registered 
+			// If the player is registered
 			if (self.getUsername(socket)) {
 
 				// Check if the player has already joined a game
