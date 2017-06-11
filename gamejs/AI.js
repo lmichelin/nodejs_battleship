@@ -71,12 +71,80 @@ function AI(game) {
 	 * possibleCoordinatesArray)
 	 * @param  {array} coordinatesList  All the coordinates where no enemy boat can be !
 	 */
-	this.evaluateArray = function(coordinatesList) {
+	this.evaluateArray = function(coordinatesList, enemyPlayer) {
 		for (coordinates of coordinatesList) {
 			var index = this.findIndexOf(coordinates);
-			this.possibleCoordinatesArray.splice(index, 1);
+			if (index) {
+				this.possibleCoordinatesArray.splice(index, 1);
+			}
+		}
+
+		// Update all possibilities
+
+		var minLength = this.findSmallestEnemyBoatSize(enemyPlayer);
+		console.log('minLength');
+		console.log(minLength);
+		for (var i = 0; i < this.possibleCoordinatesArray.length; i++) {
+
+			// Check horizontal direction and vertical direction
+			var horizontal = this.checkBoatPossibilityHorizontal(this.possibleCoordinatesArray[i], minLength);
+			var vertical = this.checkBoatPossibilityVertical(this.possibleCoordinatesArray[i], minLength);
+			var counter = Math.max(horizontal, vertical);
+			if (counter < minLength) {
+				console.log(vertical);
+				console.log(horizontal);
+				console.log(this.possibleCoordinatesArray[i]);
+				this.possibleCoordinatesArray.splice(i, 1);
+				console.log(counter);
+			}
 		}
 	};
+
+	/**
+	 * Sends the size of the boat that can be set on those coordinates horizontally
+	 * @param  {array} coordinates coordinates
+	 * @return {integer} maximum size of the booat that can be set
+	 */
+	this.checkBoatPossibilityHorizontal = function(coordinates) {
+		var col = 1;
+		var plus = 1;
+		while (this.battleship.isInGrid([coordinates[0], coordinates[1]+col]) && this.battleship.attack_grid[coordinates[0]][coordinates[1] + col] == 0) {
+			plus++;
+			col++;
+		}
+		col = 1;
+		var minus = 0;
+		while (this.battleship.isInGrid([coordinates[0], coordinates[1]-col]) && this.battleship.attack_grid[coordinates[0]][coordinates[1] - col] == 0) {
+			minus++;
+			col++;
+		}
+		var result = plus + minus;
+		return result;
+	}
+
+	/**
+	 * Sends the size of the boat that can be set on those coordinates vertically
+	 * @param  {array} coordinates coordinates
+	 * @return {integer} maximum size of the booat that can be set
+	 */
+	this.checkBoatPossibilityVertical = function(coordinates) {
+		var x = coordinates[0];
+		var y = coordinates[1];
+		var plus = 1;
+		var row = 1;
+		while (this.battleship.isInGrid([coordinates[0]+row, coordinates[1]]) && this.battleship.attack_grid[coordinates[0] + row][coordinates[1]] == 0) {
+			plus++;
+			row++;
+		}
+		row = 1;
+		var minus = 0;
+		while (this.battleship.isInGrid([coordinates[0]-row, coordinates[1]]) && this.battleship.attack_grid[coordinates[0] - row][coordinates[1]] == 0) {
+			minus++;
+			row++;
+		}
+		var result =  plus + minus;
+		return result;
+	}
 
 	/**
 	 * Evaluate Sub Array: Evaluates the possibleCoordinatesSubArray according to the hitCoordinates ... If the hitCoordinates
@@ -166,9 +234,44 @@ function AI(game) {
 			// Send attack to the player
 			this.battleship.attackEnemy(attack_coordinates, enemyPlayer);
 
+			var hitBoat = enemyPlayer.battleship.findHitBoat(x,y);
+			if(hitBoat.isSunk) {
+				var first = hitBoat.coordinatesList[0];
+				var last = hitBoat.coordinatesList[hitBoat.coordinatesList.length-1];
+				if (hitBoat.direction == 'right') {
 
-			if(enemyPlayer.battleship.findHitBoat(x,y).isSunk) {
-				this.evaluateArray(this.hitCoordinates);
+					if (this.battleship.isInGrid([first[0], first[1] - 1])) {
+						this.hitCoordinates.push([first[0], first[1] - 1]);
+					}
+					if (this.battleship.isInGrid([last[0], last[1] + 1])) {
+						this.hitCoordinates.push([last[0], last[1] + 1]);
+					}
+					for (coordinates of hitBoat.coordinatesList) {
+						if (this.battleship.isInGrid([coordinates[0] + 1, coordinates[1]])) {
+							this.hitCoordinates.push([coordinates[0] + 1, coordinates[1]]);
+						}
+						if (this.battleship.isInGrid([coordinates[0] - 1, coordinates[1]])) {
+							this.hitCoordinates.push([coordinates[0] - 1, coordinates[1]]);
+						}
+					}
+				}
+				if (hitBoat.direction == 'down') {
+					if (this.battleship.isInGrid([first[0] - 1, first[1]])) {
+						this.hitCoordinates.push([first[0] - 1, first[1]]);
+					}
+					if (this.battleship.isInGrid([last[0] + 1, last[1]])) {
+						this.hitCoordinates.push([last[0] + 1, last[1]]);
+					}
+					for (coordinates of hitBoat.coordinatesList) {
+						if (this.battleship.isInGrid([coordinates[0], coordinates[1] + 1])) {
+							this.hitCoordinates.push([coordinates[0], coordinates[1] + 1]);
+						}
+						if (this.battleship.isInGrid([coordinates[0], coordinates[1] - 1])) {
+							this.hitCoordinates.push([coordinates[0], coordinates[1] - 1]);
+						}
+					}
+				}
+				this.evaluateArray(this.hitCoordinates, enemyPlayer);
 
 				// Reinitialize hit coordinates
 				this.hitCoordinates = [];
@@ -179,7 +282,7 @@ function AI(game) {
 		else {
 			// Send attack to the player
 			this.battleship.attackEnemy(attack_coordinates, enemyPlayer);
-			this.evaluateArray([[x,y]]);
+			this.evaluateArray([[x,y]], enemyPlayer);
 		}
 
 		this.evaluateSubArray();
@@ -196,6 +299,23 @@ function AI(game) {
 				return i;
 			}
 		}
+	}
+
+
+	/**
+	 * Returns the smallest size of the enemy boats which is not yet destroyed
+	 * @param  {[type]} enemyPlayer [description]
+	 * @return {[type]}             [description]
+	 */
+	this.findSmallestEnemyBoatSize = function(enemyPlayer) {
+		var minLength = 5;
+		for (boat in enemyPlayer.battleship.boats) {
+			// If the boat size is smaller than minLength and boat is not sunk
+			if (enemyPlayer.battleship.boats[boat].size < minLength && !enemyPlayer.battleship.boats[boat].isSunk) {
+				minLength = enemyPlayer.battleship.boats[boat].size;
+			}
+		}
+		return minLength;
 	}
 }
 

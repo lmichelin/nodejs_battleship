@@ -63,6 +63,19 @@ describe('SinglePlayer game between player and AI', function() {
 			});
 		});
 	});
+
+	describe('Singleplayer Disconnect', function() {
+		it('Player should be disconnected', function(done) {
+			player
+				.get('/logout')
+				.end(function(err, res) {
+					expect(res.statusCode).to.equal(200);
+					expect(res).to.redirectTo('http://127.0.0.1:8000/');
+					expect(gameServer.players).to.not.have.any.key('username');
+				done();
+			});
+		});
+	})
 });
 
 module.exports = player;

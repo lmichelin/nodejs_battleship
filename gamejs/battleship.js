@@ -209,7 +209,6 @@ function battleship() {
 	this.findHitBoat = function(x, y) {
 		for (boat in this.boats) {
 			for (coordinates of this.boats[boat].coordinatesList) {
-				console.log(coordinates);
 				if (coordinates[0] == x && coordinates[1] == y) {
 					return this.boats[boat];
 				}

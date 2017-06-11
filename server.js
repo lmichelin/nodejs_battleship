@@ -44,23 +44,25 @@ var gameServer = new gameServer();
 
 var io = socket(server);
 
-/******************************************** Export relevant objects ***************************************/
-
-//Export the server and io modules to use it in other js files
-module.exports = {
-	server: server,
-	io: io,
-	gameServer: gameServer
-};
-
 // Use shared session middleware for socket.io
 io.use(sharedsession(session, {
     autoSave:true  // setting autoSave:true
 }));
 
 // Initialize a client server
-var clientServer = require('./gamejs/clientServer.js');
-new clientServer(gameServer, io).init();
+var ClientServer = require('./gamejs/clientServer.js');
+var clientServer = new ClientServer(gameServer, io);
+clientServer.init();
+
+/******************************************** Export relevant objects ***************************************/
+
+//Export the server and io modules to use it in other js files
+module.exports = {
+	server: server,
+	io: io,
+	gameServer: gameServer,
+	clientServer: clientServer,
+};
 
 /*************************************** include routes *****************************************************/
 
@@ -94,6 +96,4 @@ app.get('/', function(req, res) {
 
 /**************************************** Listen server *******************************************************/
 server.listen(port);
-
-module.exports[server] = server;
 
