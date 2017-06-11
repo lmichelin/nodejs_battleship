@@ -73,7 +73,30 @@
 
             </div>
           </div>
+
+          <div class="modal fade" id="myModal" role="dialog" style="color: black;">
+            <div class="modal-dialog">
+
+              <!-- Modal content-->
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  <h4 v-if="serverMessage == 'You won !'" class="modal-title">Congratulations ! You won !<br>Sure you will keep your performance !</h4>
+                  <h4 v-else class="modal-title">Oh ! You have lost !<br>Sure you will do better next time !</h4>
+                </div>
+                <div class="modal-body">
+                  <p>Thank you for your participation !</p>
+                </div>
+                <div class="modal-footer">
+                  <a href="/logout"><button type="button" class="btn btn-default">Close</button></a>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
         </div>
+
 
         <!-- JS -->
         <script src="/node_modules/vue/dist/vue.js"></script>

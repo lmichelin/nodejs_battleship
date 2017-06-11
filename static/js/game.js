@@ -33,6 +33,7 @@ var game = new Vue({
 		// On finish, send the win or lose message
 		socket.on('finish', function(response) {
 			this.serverMessage = response.message;
+			$('#myModal').modal('show');
 		}.bind(this));
 
 		socket.on('logout', function(response) {
