@@ -19,3 +19,7 @@ Après avoir cloné le dépôt, lancer `npm install` à la racine du projet pour
 Lancer le serveur en exécutant `node server.js`
 
 Accédez au jeu via un navigateur à l'adresse : `http://localhost:8000`
+
+## Tests
+
+Pour effectuer des tests unitaires sur l'ensemble du code (utile après chaque modification), utilisez a commande `npm test`.
