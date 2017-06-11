@@ -51,5 +51,16 @@ describe('SinglePlayer game between player and AI', function() {
 				done();
 			});
 		});
+
+		it('Player should set his boats randomly', function(done) {
+			player
+				.post('/setBoats/sendBoats')
+				.send({randomSet: true})
+				.end(function(err, res) {
+					expect(res.statusCode).to.equal(200);
+					expect(res.body.redirect).to.equal('/game');
+				done();
+			});
+		});
 	});
 });

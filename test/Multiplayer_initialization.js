@@ -155,10 +155,6 @@ describe('Multiplayer game between player_one and player_two', function() {
 			});
 		});
 	});
-
-	describe('Game between player_one and player_two', function() {
-		//TODO
-	});
 });
 
 
