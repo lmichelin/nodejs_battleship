@@ -9,28 +9,28 @@
 		<title>The Battleship Game</title>
 	</head>
 	<body>
-		
-		
+
+
 		<div id="createGame" class="container text-center">
 			<h1>The Battleship Game</h1>
-			
+
 			<div v-for="message in messages" id="message" style="display: inline;" class='alert alert-danger'>
 				<span class="glyphicon glyphicon-info-sign"></span> &nbsp;{{message}}
 			</div>
 			<br>
-			<div class="col-sm-6 col-sm-offset-3">
+			<div class="centerVertical alert alert-info">
 				<div class="form-group">
-					<label for="username">Username</label>
-					<input v-model="username" type="text" class="form-control" autofocus>
+					<label for="username">Choose an username</label>
+					<input v-model="username" type="text" class="form-control" placeholder="Toto" autofocus>
 				</div>
 				<div class="form-group">
-					<label for="gameName">Game Name</label>
-					<input v-model="gameName" type="text" class="form-control" value="MyGame">
+					<label for="gameName">Your game Name</label>
+					<input v-model="gameName" type="text" class="form-control" placeholder="MyGame">
 				</div>
 				<button v-on:click="uploadForm" type="submit" class="btn btn-primary">Submit</button>
 			</div>
 		</div>
-		
+
 		<!-- JS -->
 		<script src="/node_modules/vue/dist/vue.js"></script>
 		<script src="/node_modules/vue-resource/dist/vue-resource.js"></script>

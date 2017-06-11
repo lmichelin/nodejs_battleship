@@ -11,7 +11,7 @@ var createGame = new Vue({
 	data: {
 		messages: [], // Message to be sent to the user if there are any errors
 		username: '',
-		gameName: 'MyGame',
+		gameName: '',
 	},
 
 	// Methods we want to use in our application are registered here
