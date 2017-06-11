@@ -81,7 +81,6 @@ var clientServer = function(gameServer, io) {
 				else {
 					// Set the turn to the AI
 					player.isTurn = false;
-
 					var AIAttack_coordinates = enemyPlayer.guessCoordinates();
 					enemyPlayer.attackEnemy(AIAttack_coordinates, player);
 
