@@ -1,39 +1,62 @@
-var chai = require('chai');
-var expect = require('chai').expect;
-var request = require('request');
+"use strict"
+
+let chai = require('chai');
+let should = require('chai').should();
+let request = require('request');
 let chaiHttp = require('chai-http');
-var server = require('../server').server;
+let server = require('../server.js').server;
+
 
 chai.use(chaiHttp);
 
-describe('Status of all the pages', function() {
-	describe('Main page', function() {
-		it('status', function() {
+describe('Routes: ', function() {
+	describe('Test the multiplayer game routes', function() {
+		it('it should return the Main page', function(done) {
 			chai.request(server)
 				.get('/')
 				.end(function(err, res) {
-					expect(res.statusCode).to.equal(200);
-				});
+					res.should.have.status(200);
+				done();
+			});
 		});
 
-
-		it('content', function() {
-			chai.request(server)
-				.get('/join')
-				.end(function(err, res) {
-					expect(res.statusCode).to.equal(200);
-				});
-		});
-	});
-
-	describe('Game page', function() {
-		it('status', function() {
+		it('it should return the createGame page', function(done) {
 			chai.request(server)
 				.get('/createGame')
 				.end(function(err, res) {
-					expect(res.statusCode).to.equal(200);
-				});
+					res.should.have.status(200);
+				done();
+			});
+		});
+
+		it('it should post a username and game name', function(done) {
+			chai.request(server)
+				.post('/createGame')
+				.send({username: 'Francois', gameName:'MyGame'})
+				.end(function(err, res) {
+					res.should.have.status(200);
+				done();
+			});
+		});
+
+		it('it should return the setBoats page', function(done) {
+			chai.request(server)
+				.get('/setBoats')
+				.end(function(err, res) {
+					res.should.have.status(200);
+				done();
+			});
 		});
 	});
 
+	describe('get content from pages', function() {
+		it('should return the content of the setBoats page', function(done) {
+			chai.request(server)
+				.get('/setBoats/getBoats')
+				.end(function(err, res) {
+					res.should.have.status(200);
+				done();
+				});
+		});
+	})
 });

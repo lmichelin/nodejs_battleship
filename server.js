@@ -15,7 +15,6 @@ var session = require("express-session")({
 var gameServer = require('./gamejs/gameServer.js');
 
 
-
 /********************* Initialize express, session, bodyparser and template engine *********************/
 
 var app = express();
@@ -39,20 +38,9 @@ app.set('view engine', 'ejs'); // Use ejs as default template engine
 
 var gameServer = new gameServer();
 
-
 /************************************************* Socket.io *************************************************/
 
 var io = socket(server);
-
-// Use shared session middleware for socket.io
-io.use(sharedsession(session, {
-    autoSave:true  // setting autoSave:true
-}));
-
-// Initialize a client server
-var clientServer = require('./gamejs/clientServer.js');
-new clientServer(gameServer, io).init();
-
 
 /******************************************** Export relevant objects ***************************************/
 
@@ -62,6 +50,15 @@ module.exports = {
 	io: io,
 	gameServer: gameServer
 };
+
+// Use shared session middleware for socket.io
+io.use(sharedsession(session, {
+    autoSave:true  // setting autoSave:true
+}));
+
+// Initialize a client server
+var clientServer = require('./gamejs/clientServer.js');
+new clientServer(gameServer, io).init();
 
 /*************************************** include routes *****************************************************/
 

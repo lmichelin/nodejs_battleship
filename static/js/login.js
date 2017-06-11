@@ -49,7 +49,7 @@ var createGame = new Vue({
 });
 
 // Create a vue holding the information about the user
-var createGame = new Vue({
+var login = new Vue({
 
 	// We want to target the div with an id of 'createGame'
 	el: '#login',
