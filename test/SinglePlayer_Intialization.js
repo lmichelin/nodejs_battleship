@@ -64,3 +64,5 @@ describe('SinglePlayer game between player and AI', function() {
 		});
 	});
 });
+
+module.exports = player;
