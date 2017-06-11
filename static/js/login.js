@@ -20,7 +20,7 @@ var login = new Vue({
 			this.messages = [];
 			// If the user has not picked a game, send error message !
 			if (this.username == '') {
-				this.messages.push('Please add a username');
+				this.messages.push('Please add an username');
 
 			// If there are no errors
 			} else {

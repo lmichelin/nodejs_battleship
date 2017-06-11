@@ -21,7 +21,7 @@ var createGame = new Vue({
 			this.messages = [];
 			// If the user has not picked a game, send error message !
 			if (this.username == '') {
-				this.messages.push('Please add a username');
+				this.messages.push('Please add an username');
 			}
 			if (this.gameName == '') {
 				this.messages.push('Please add a game name')
