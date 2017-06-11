@@ -243,6 +243,11 @@ function battleship() {
 		}
 	};
 
+	/**
+	 * Updates the battleship object attack_grid if the enemy boat has been destroyed
+	 * @param  {string} boat_name   name of the enemy boat
+	 * @param  {player} enemyPlayer player objetc
+	 */
 	this.sinkEnemyBoatIfDestroyed = function(boat_name, enemyPlayer) {
 		if (enemyPlayer.battleship.boats[boat_name].isSunk) {
 			for (coordinates of enemyPlayer.battleship.boats[boat_name].coordinatesList) {

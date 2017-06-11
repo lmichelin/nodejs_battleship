@@ -3,6 +3,7 @@
 var express = require('express'); // Express to handle client requests and server responses
 var ejs = require('ejs'); // ejs for writing and generating templates
 var bodyParser = require('body-parser'); // BodyParser for easy client-server communication
+var cookieParser = require('cookie-parser');
 var path = require('path'); // Path module for directory naviguation
 var http = require('http'); // http needed for socket.io
 var socket = require('socket.io'); // Socket.io is needed for synchronous communication between client and server
@@ -22,6 +23,7 @@ var app = express();
 var server = http.createServer(app); // create server to listen to
 
 app.use(session); // Use express-session middleware for express
+app.use(cookieParser()); // Use cookie parser for easy access to cookies on response
 
 var port = 8000; // Define Port 8080 by default 
 
@@ -89,5 +91,9 @@ app.get('/', function(req, res) {
 	 }
 });
 
+
 /**************************************** Listen server *******************************************************/
 server.listen(port);
+
+module.exports[server] = server;
+

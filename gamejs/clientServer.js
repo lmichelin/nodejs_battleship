@@ -41,6 +41,9 @@ var clientServer = function(gameServer, io) {
 		});
 	};
 
+
+/******************************** Socket io handlers *************************************/
+
 	/**
 	 * Socket io handler for the solo game type (the opponent is an ai)
 	 * @param  {socket} socket socket of the connected user
@@ -164,6 +167,7 @@ var clientServer = function(gameServer, io) {
 
 			// Set the attack event (if it is the turn of the user, he may make attack events)
 			socket.on('attack', function(attackCoordinates) {
+				// Check if boats are set and it is the user's turn to play
 				if (enemyPlayer.battleship.areBoatsSet && gameServer.players[username].isTurn) {
 					// Get attack coordinates
 					var coordinates = [attackCoordinates.row, attackCoordinates.col];
@@ -195,18 +199,38 @@ var clientServer = function(gameServer, io) {
 
 	/******************************** Methods *************************************/
 
+	/**
+	 * Get the game in which the user is in
+	 * @param  {socket} socket 
+	 * @return {game} game object of the player
+	 */
 	self.getUserGame = function(socket) {
 		return self.gameServer.players[socket.handshake.session.username].game;
 	}
 
+	/**
+	 * Get the username of the connected user
+	 * @param  {socket} socket 
+	 * @return {String}        username of the user
+	 */
 	self.getUsername = function(socket) {
 		return socket.handshake.session.username;
 	}
 
+	/**
+	 * Get the battleship object of the connected user
+	 * @param  {socket} socket 
+	 * @return {battleship} user battleship object
+	 */
 	self.getUserBattleship = function(socket) {
 		return self.gameServer.players[self.getUsername(socket)].battleship;
 	}
 
+
+	/**
+	 * Send wait status to the player when no other user has joined the game
+	 * @param  {socket} socket 
+	 */
 	self.sendWaitStatus = function(socket) {
 		var status = {
 			status: 'waiting',
@@ -215,6 +239,10 @@ var clientServer = function(gameServer, io) {
 		socket.emit('status', status);
 	}
 
+	/**
+	 * When a user connects to the game, send connect status to all players in the game
+	 * @param  {socket} socket 
+	 */
 	self.sendConnectStatus = function(socket) {
 		var game = self.getUserGame(socket);
 		var player_one = game.player_one;
@@ -232,15 +260,27 @@ var clientServer = function(gameServer, io) {
 		socket.emit('status', status);
 	}
 
+	/**
+	 * Puts a user in a game room when he joins or creates a game
+	 * @param  {socket} socket
+	 */
 	self.joinGameRoom = function(socket) {
 		var game = self.getUserGame(socket);
 		socket.join(game.name);
 	}
 
+	/**
+	 * When a user wants to join a game on the join page, send him the available games
+	 * @param  {socket} socket
+	 */
 	self.sendAvailableGames = function(socket) {
 		socket.emit('listGames', self.gameServer.availableGames);
 	}
 
+	/**
+	 * Send status that all the boats of the user have been set
+	 * @param  {socket} socket 
+	 */
 	self.sendSetBoatStatus = function(socket) {
 		var game = self.getUserGame(socket);
 		var response = {
@@ -250,6 +290,11 @@ var clientServer = function(gameServer, io) {
 		self.io.sockets.in(game.name).emit('setBoats', response)
 	}
 
+	/**
+	 * Get the enemy player of the user
+	 * @param  {socket} socket 
+	 * @return {player} player object of the enemy player
+	 */
 	self.getEnemyPlayer = function(socket) {
 		var game = self.getUserGame(socket);
 		var username = self.getUsername(socket);
@@ -260,6 +305,10 @@ var clientServer = function(gameServer, io) {
 		}
 	}
 
+	/**
+	 * Send the wait for enemy boat status, the enemy player has not yet set all his boats
+	 * @param  {socket} socket
+	 */
 	self.sendWaitForBoatStatus = function(socket) {
 		var username = self.getUsername(socket);
 		var enemyPlayer = self.getEnemyPlayer(socket);
@@ -269,6 +318,10 @@ var clientServer = function(gameServer, io) {
 		socket.emit('wait', response);
 	}
 
+	/**
+	 * Send start game status when all users have set the boats
+	 * @param  {socket} socket
+	 */
 	self.sendStartGameStatus = function(socket) {
 		var response = {
 				message: 'It is your turn to play',
@@ -279,6 +332,10 @@ var clientServer = function(gameServer, io) {
 		socket.emit('wait', response);
 	}
 
+	/**
+	 * Send game over status when a user has won
+	 * @param  {socket} socket 
+	 */
 	self.sendGameOverStatus = function(socket) {
 		var response = {
 			message: 'You have lost ! Better luck next time !',
@@ -292,6 +349,10 @@ var clientServer = function(gameServer, io) {
 		socket.emit('finish', response);
 	}
 
+	/**
+	 * Send the other player the go ahead to play
+	 * @param  {socket} socket 
+	*/
 	self.sendNextTurnStatus = function(socket) {
 		response = {
 			message: 'It is your turn to play',
@@ -306,6 +367,11 @@ var clientServer = function(gameServer, io) {
 		socket.emit('attack', response);
 	}
 
+	/**
+	 * For AI only (single player game)
+	 * When a user has finished his turn, set the turn to the AI
+	 * @param  {socket} socket
+	 */
 	self.sendIAResponse = function(socket) {
 		response = {
 			message: "It is AI's turn to play",
@@ -314,6 +380,10 @@ var clientServer = function(gameServer, io) {
 		socket.emit('attack', response);
 	}
 
+	/**
+	 * When the AI has finished his turn, send the next turn status to the user
+	 * @param  {socket} socket 
+	 */
 	self.sendSoloResponse = function(socket) {
 		response = {
 			message: "It is your turn to play",
@@ -322,6 +392,10 @@ var clientServer = function(gameServer, io) {
 		socket.emit('attack', response);
 	}
 
+	/**
+	 * Disconnect a user
+	 * @param  {socket} socket 
+	 */
 	self.handleDisconnect = function(socket) {
 		var response = {
 			message: 'You are not connected',
@@ -331,6 +405,10 @@ var clientServer = function(gameServer, io) {
 		socket.disconnect();
 	}
 
+	/**
+	 * Disconnect all players after 5 seconds
+	 * @param  {socket} socket
+	 */
 	self.disconnectAllPlayersInGame = function(socket) {
 		setTimeout(function() {
 			// Disconnect enemy player

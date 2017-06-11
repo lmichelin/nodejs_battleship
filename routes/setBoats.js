@@ -45,9 +45,12 @@ router.post('/sendBoats', function(req, res) {
 	// Make an error array to store all error messages for the user
 	var errors = [];
 
-	if (typeof req.body.randomSet != "undefined") {
+	// See if player wants the boats to be set randomly
+	if (req.body.randomSet) {
 		battleship.randomSetBoats();
 	}
+
+	// If not place the boats ...
 	else {
 
 		var sentBoats = req.body.boats;

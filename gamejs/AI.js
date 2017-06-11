@@ -34,8 +34,17 @@ function AI(game) {
 	 */
 	this.possibleCoordinatesSubArray = [];
 
+	/**
+	 * Once a boat is hit by the AI, the hit coordinates has to be filled with the enemy boat coordinates tthat has been hit
+	 * @type {Array}
+	 */
 	this.hitCoordinates = [];
 
+	/**
+	 * Guess randomly some coordinates that are within the possibleCoordinatesArray if no boats have been previously hit or that
+	 * are within the possibleCoordinatesSubArray if an enemy boat has been previously hit
+	 * @return {array} attack coordinates
+	 */
 	this.guessCoordinates = function() {
 		var array = this.possibleCoordinatesArray;
 		var subArray = this.possibleCoordinatesSubArray;
@@ -57,7 +66,11 @@ function AI(game) {
 		return coordinates;
 	};
 
-
+	/**
+	 * Evaluate the possibleCoordinatesArray once the AI has tested some coordinates (these coordinates have to be removed from the
+	 * possibleCoordinatesArray)
+	 * @param  {array} coordinatesList  All the coordinates where no enemy boat can be !
+	 */
 	this.evaluateArray = function(coordinatesList) {
 		for (coordinates of coordinatesList) {
 			var index = this.findIndexOf(coordinates);
@@ -65,6 +78,10 @@ function AI(game) {
 		}
 	};
 
+	/**
+	 * Evaluate Sub Array: Evaluates the possibleCoordinatesSubArray according to the hitCoordinates ... If the hitCoordinates
+	 * array is not empty, populate the sub array with all the possibilities where the rest of enemy boat can be
+	 */
 	this.evaluateSubArray = function() {
 		// Reset the sub array first
 		this.possibleCoordinatesSubArray = [];
@@ -131,6 +148,11 @@ function AI(game) {
 		}
 	};
 
+	/**
+	 * Attacks the enemy player battleship while reevalutaing the hitCoordinates, the possibleCoordinatesArray and possibleCoordinatesSubArray
+	 * @param  {array} attack_coordinates coordinates that were guessed bu the AI
+	 * @param  {player} enemyPlayer        enemy player object
+	 */
 	this.attackEnemy = function(attack_coordinates, enemyPlayer) {
 		var x = attack_coordinates[0];
 		var y = attack_coordinates[1];
@@ -163,6 +185,11 @@ function AI(game) {
 		this.evaluateSubArray();
 	};
 
+	/**
+	 * Finds the index of some coordinates within the possibleCoordinatesArray
+	 * @param  {array} coordinates 
+	 * @return {integer}             index of the entered coordinates
+	 */
 	this.findIndexOf = function(coordinates) {
 		for (var i = 0; i < this.possibleCoordinatesArray.length; i++) {
 			if (coordinates[0] == this.possibleCoordinatesArray[i][0] &&  coordinates[1] == this.possibleCoordinatesArray[i][1]) {
@@ -174,6 +201,11 @@ function AI(game) {
 
 module.exports = AI;
 
+/**
+ * Simple array creation with array values corresponding to the position of the value within the array
+ * @param  {integer} n size of the matrix
+ * @return {array}  
+ */
 function createArray(n) {
 	var array = [];
 	for (i=0; i < n; i++) {
