@@ -8,6 +8,7 @@ var router = express.Router(); //Create router object
 router.get('/', function(req, res) {
 	var correctRoute = gameServer.sendRoute(req.session.username);
 	if (correctRoute == '/') {
+		// Attribute a username to the user
 		req.session.username = req.sessionID;
 		req.session.save();
 
