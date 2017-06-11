@@ -67,7 +67,7 @@ router.post('/sendBoats', function(req, res) {
 
 			// If the boat has not been set by the user (normally impossible), add error
 			if (!sentBoats[sentBoat].isSet) {
-				errors.push(sentBoats[sentBoat].name + ' has not been set !');
+				errors.push(sentBoat + ' has not been set !');
 			}
 
 			// Set coordinates list of the boat:

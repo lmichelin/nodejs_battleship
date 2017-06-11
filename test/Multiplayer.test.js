@@ -7,13 +7,26 @@ var server = require('../server.js').server;
 var gameServer = require('../server.js').gameServer;
 chai.use(chaiHttp);
 
+
+var io = require('socket.io-client');
+
+var ioOptions = {
+	transports: ['websocket'],
+	forceNew: true,
+	reconnection: true
+};
+
+var player_oneSocket = io('http://localhost:8000', ioOptions);
+var player_twoSocket = io('http://localhost:8000', ioOptions);
+
 // Player one
 var player_one = chai.request.agent(server);
+var boatsPlayerOne = require('./testObjects.js').boatsPlayerOne;
 
 // Player two
 var player_two = chai.request.agent(server);
+var boatsPlayerTwo = require('./testObjects.js').boatsPlayerTwo;
 
-// Player three for tests for singlePlayer
 var player_three = chai.request.agent(server);
 
 
@@ -133,10 +146,10 @@ describe('Multiplayer game between player_one and player_two', function() {
 			});
 		});
 
-		it('Player one should set his boats randomly', function(done) {
+		it('Player one should set his boats', function(done) {
 			player_one
 				.post('/setBoats/sendBoats')
-				.send({randomSet: true})
+				.send({boats: boatsPlayerOne})
 				.end(function(err, res) {
 					expect(res.statusCode).to.equal(200);
 					expect(res.body.redirect).to.equal('/game');
@@ -144,13 +157,42 @@ describe('Multiplayer game between player_one and player_two', function() {
 			});
 		});
 
-		it('Player two should set his boats randomly', function(done) {
+		it('Player two should set his boats', function(done) {
 			player_two
 				.post('/setBoats/sendBoats')
-				.send({randomSet: true})
+				.send({boats: boatsPlayerTwo})
 				.end(function(err, res) {
 					expect(res.statusCode).to.equal(200);
 					expect(res.body.redirect).to.equal('/game');
+				done();
+			});
+		});
+	});
+	
+	describe('Multiplayer disconnect', function() {
+		it('Player two should be disconnected', function(done) {
+			player_two
+				.get('/logout')
+				.end(function(err, res) {
+					expect(res.statusCode).to.equal(200);
+					expect(res).to.redirectTo('http://127.0.0.1:8000/');
+					expect(gameServer.players).to.not.have.any.key('Nicolas');
+				done();
+			});
+		});
+
+		it('should remove the created game', function(done) {
+			expect(gameServer.games).to.not.have.any.key('MyGame');
+			done();
+		});
+
+		it('should disconnect the first player', function(done) {
+			player_one
+				.get('/logout')
+				.end(function(err, res) {
+					expect(res.statusCode).to.equal(200);
+					expect(res).to.redirectTo('http://127.0.0.1:8000/');
+					expect(gameServer.players).to.not.have.any.key('Francois');
 				done();
 			});
 		});

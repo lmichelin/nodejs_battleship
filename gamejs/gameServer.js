@@ -113,7 +113,10 @@ function gameServer() {
 	 * @return {Boolean}          true if already exists, false otherwise
 	 */	
 	this.usernameAlreadyExists = function(username) {
-		return this.players[username];
+		if (this.players[username]) {
+			return true;
+		}
+		return false;
 	};
 
 	/**
@@ -122,7 +125,10 @@ function gameServer() {
 	 * @return {Boolean}          true if already exists, false otherwise
 	 */
 	this.gameNameAlreadyExists = function(gameName) {
-		return this.games[gameName];
+		if (this.games[gameName]) {
+			return true;
+		}
+		return false;
 	}
 
 	/**

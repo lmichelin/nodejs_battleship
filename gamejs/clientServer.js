@@ -68,7 +68,7 @@ var clientServer = function(gameServer, io) {
 
 				// Execute attack function
 				self.getUserBattleship(socket).attackEnemy(coordinates, enemyPlayer);
-				self.sendIAResponse(socket);
+				self.sendAIResponse(socket);
 
 				// Check if the user has won
 				if (enemyPlayer.battleship.isFleetDestroyed()) {
@@ -205,7 +205,7 @@ var clientServer = function(gameServer, io) {
 	 * @return {game} game object of the player
 	 */
 	self.getUserGame = function(socket) {
-		return self.gameServer.players[socket.handshake.session.username].game;
+		return self.gameServer.players[self.getUsername(socket)].game;
 	}
 
 	/**
@@ -313,6 +313,7 @@ var clientServer = function(gameServer, io) {
 		var username = self.getUsername(socket);
 		var enemyPlayer = self.getEnemyPlayer(socket);
 		var response = {
+			status : 'waiting',
 			message: 'Waiting for ' + enemyPlayer.username + " to set his boats",
 		}
 		socket.emit('wait', response);
@@ -372,7 +373,7 @@ var clientServer = function(gameServer, io) {
 	 * When a user has finished his turn, set the turn to the AI
 	 * @param  {socket} socket
 	 */
-	self.sendIAResponse = function(socket) {
+	self.sendAIResponse = function(socket) {
 		response = {
 			message: "It is AI's turn to play",
 			battleship: self.getUserBattleship(socket)
