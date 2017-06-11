@@ -73,10 +73,10 @@ var clientServer = function(gameServer, io) {
 				// Check if the user has won
 				if (enemyPlayer.battleship.isFleetDestroyed()) {
 					self.sendGameOverStatus(socket);
-					//Disconnect player after 5 seconds
+					//Disconnect player after 5 minutes
 					setTimeout(function() {
 						self.handleDisconnect(socket);
-					}, 5000);
+					}, 300000);
 				}
 				else {
 					// Set the turn to the AI
@@ -87,10 +87,10 @@ var clientServer = function(gameServer, io) {
 					// Check if the AI has won
 					if (self.getUserBattleship(socket).isFleetDestroyed()) {
 						self.sendGameOverStatus(socket);
-						//Disconnect player after 5 seconds
+						//Disconnect player after 5 minutes
 						setTimeout(function() {
 							self.handleDisconnect(socket);
-						}, 5000);
+						}, 300000);
 					}
 
 					setTimeout(function () {
@@ -406,7 +406,7 @@ var clientServer = function(gameServer, io) {
 	}
 
 	/**
-	 * Disconnect all players after 5 seconds
+	 * Disconnect all players after  seconds
 	 * @param  {socket} socket
 	 */
 	self.disconnectAllPlayersInGame = function(socket) {
@@ -415,7 +415,7 @@ var clientServer = function(gameServer, io) {
 			self.handleDisconnect(self.io.sockets.connected[self.getEnemyPlayer(socket).socketId]);
 			// Disconnect the player
 			self.handleDisconnect(socket);
-		}, 5000);
+		}, 300000);
 	}
 };
 
